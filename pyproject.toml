@@ -1,0 +1,95 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "strx"
+dynamic = ["version"]
+description = "Consistent API for string workloads"
+readme = "README.md"
+requires-python = ">=3.12"
+license = "MIT"
+keywords = ["strx", "python3"]
+authors = [{ name = "Thuyet Bao", email = "trthuyetbao@gmail.com" }]
+classifiers = [
+  "Development Status :: 5 - Production/Stable",
+  "Operating System :: OS Independent",
+  "Programming Language :: Python",
+  "Programming Language :: Python :: 3",
+  "Programming Language :: Python :: 3.12",
+  "Programming Language :: Python :: 3.13",
+]
+dependencies = []
+
+[project.urls]
+Documentation = "https://github.com/thuyetbao/strx#README"
+Issues = "https://github.com/thuyetbao/strx/issues"
+Source = "https://github.com/thuyetbao/strx"
+
+[tool.hatch.version]
+path = "strx/__init__.py"
+
+[tool.hatch.envs.default]
+installer = "uv"
+dependencies = [
+  "uv>=0.7.3,<0.9.0",
+  "coverage[toml]>=6.5",
+  "pytest>=8.2.0,<8.5.0",
+  "ruff>=0.6.2,<0.7.0",
+  # Code compliance
+  "pre-commit>=4.0.1,<5.0.0",
+  # PEP8 compliance
+  "autopep8",
+  "pyclean",
+  "mypy",
+]
+
+[tool.hatch.envs.default.scripts]
+test = "pytest {args:tests}"
+test-cov = "coverage run -m pytest {args:tests}"
+cov-report = ["- coverage combine", "coverage report"]
+cov = ["test-cov", "cov-report"]
+
+[[tool.hatch.envs.all.matrix]]
+python = ["3.12", "3.13"]
+
+[tool.hatch.envs.lint]
+detached = true
+dependencies = ["black>=23.1.0", "mypy>=1.0.0"]
+
+[tool.hatch.envs.lint.scripts]
+typing = "mypy --install-types --non-interactive {args:strx tests}"
+style = ["ruff {args:.}", "black --check --diff {args:.}"]
+fmt = ["black {args:.}", "ruff --fix {args:.}", "style"]
+all = ["style", "typing"]
+
+[tool.black]
+target-version = ["py312"]
+line-length = 120
+skip-string-normalization = true
+
+[tool.coverage.run]
+source_pkgs = ["strx", "tests"]
+branch = true
+parallel = true
+omit = ["strx/__init__.py"]
+
+[tool.coverage.paths]
+strx = ["strx"]
+tests = ["tests"]
+
+[tool.coverage.report]
+exclude_lines = ["no cov", "if __name__ == .__main__.:", "if TYPE_CHECKING:"]
+
+[tool.hatch.build.targets.sdist]
+include = ["strx/**"]
+exclude = [".github", "docs", "tests"]
+
+[tool.hatch.build.targets.wheel]
+packages = ["strx"]
+only-packages = true
+include = ["strx/**"]
+exclude = [".github", "docs", "tests"]
+
+[tool.hatch.publish.index]
+disable = false
