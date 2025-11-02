@@ -33,9 +33,13 @@
 
 ---
 
-### **strx** Features
+### **strx** features
 
 - Consistent API with `str_` prefix functions
+
+<!-- - Comprehensive test suite with 100% coverage and zero errors
+
+- Type hints provided for all functions and variables to ensure code quality and readability -->
 
 ### **Usage**
 

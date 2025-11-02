@@ -14,14 +14,6 @@ def str_sub(string: str, start: int, end: Union[int, None] = None) -> str:
     return string[start:end]
 
 
-def str_to_upper(string: str) -> str:
-    return string.upper()
-
-
-def str_to_lower(string: str) -> str:
-    return string.lower()
-
-
 def str_trim(string: str) -> str:
     return string.strip()
 

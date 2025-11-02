@@ -3,7 +3,15 @@
 # Global
 import re
 import logging
-from typing import Union, Optional
+from typing import Union
+
+
+def str_to_upper(string: str) -> str:
+    return string.upper()
+
+
+def str_to_lower(string: str) -> str:
+    return string.lower()
 
 
 def str_to_number(string: str, decimal_seperator: str = ".", thousand_seperator: str = ",") -> float:
@@ -52,7 +60,7 @@ def str_to_number(string: str, decimal_seperator: str = ".", thousand_seperator:
         return _tmp
 
 
-def str_to_ratio(x: Union[str, list[Union[str, int]], tuple, None] = None) -> Optional[float]:
+def str_to_ratio(x: Union[str, list[Union[str, int]], tuple, None] = None) -> float | None:
     """Parse string into ratio rate
 
     Arguments
