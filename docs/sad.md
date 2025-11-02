@@ -32,6 +32,8 @@ The first arguments should be:
 
 - The pros/cons related to the type supporse to support: native `str` type and sequence type (list, set)
 
+- Preferred the singular form without `s` or `es` that should be the same as the function name.
+
 Here's a list of common first argument names used in string manipulation functions across popular R packages like **stringr**, **stringi**, **base R**, and others.
 These names typically refer to the input text or character vector:
 
@@ -48,17 +50,6 @@ Common the `string` argument names in Python string functions
 | `input`                               | Generic input name, Used in more abstract or pipeline functions | Used in pipelines or abstract functions                      |
 | `value`                               | Used when the string is part of a larger data structure         | Pandas, data validation libraries                            |
 | `sentence` / `paragraph` / `document` | Context-specific                                                | NLP and document processing libraries                        |
-
-### **Signature Comparison**
-
-| Signature | Pros                            | Cons                                  |
-| --------- | ------------------------------- | ------------------------------------- |
-| `string`  | Easy to understand              | Not support array or single string    |
-| `strings` | Support array of strings        | Not support single string             |
-| `stringr` | Support array and single string | Not support legacy string type (`txt` |
-| `text`    | Easy to understand              | Not support array or single string    |
-| `texts`   | Support array of strings        | Not support single string             |
-| `txt`     | Legacy type                     | Not support array or single string    |
 
 ## **Function Design**
 
