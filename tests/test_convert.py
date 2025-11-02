@@ -14,7 +14,7 @@ import strx
 
 
 @pytest.mark.parametrize(
-    "val, expected_result",
+    "value, expected_result",
     [
         ("350:100", 350 / 100),
         ("1,000:276", 1000 / 276),
@@ -27,12 +27,12 @@ import strx
         (("3 ", " 1"), 3.0),
     ],
 )
-def test_output_desired(val, expected_result):
-    assert strx.str_to_ratio(x=val) == expected_result
+def test_output_desired(value, expected_result):
+    assert strx.str_to_ratio(x=value) == expected_result
 
 
 @pytest.mark.parametrize(
-    "val",
+    "value",
     [
         (None),
         ("10.9,000:276"),
@@ -41,5 +41,5 @@ def test_output_desired(val, expected_result):
         ((3, 4, 5)),
     ],
 )
-def test_failed_parse(val):
-    assert strx.str_to_ratio(x=val) is None
+def test_failed_parse(value):
+    assert strx.str_to_ratio(x=value) is None

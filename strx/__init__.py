@@ -61,4 +61,4 @@ __all__ = [
     "str_normalize",
 ]
 
-__version__ = "0.2.3"
+__version__ = "0.2.9"

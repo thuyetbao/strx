@@ -53,9 +53,9 @@ Common the `string` argument names in Python string functions
 
 ## **Function Design**
 
-### For `str_to_number` function
+### `str_to_number` function
 
-#### For decimenal
+#### Decimenal
 
 Radix point
 

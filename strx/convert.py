@@ -63,22 +63,24 @@ def str_to_number(string: str, decimal_seperator: str = ".", thousand_seperator:
 def str_to_ratio(x: Union[str, list[Union[str, int]], tuple, None] = None) -> float | None:
     """Parse string into ratio rate
 
-    Arguments
+    Args
         x (str, list[Union[str, int]]): str, list need to parse into ratio
 
     Return
-        float: ratio parsed, happy case.
-        None when error when try to cast, or calculation.
-        E.g: Zero Divided, number of elements of list can't parse (greater than 2)
+    ------
+    float: ratio parsed, happy case.
+    None when error when try to cast, or calculation.
+    E.g: Zero Divided, number of elements of list can't parse (greater than 2)
 
     Usage
+    -----
     >>> str_to_ratio("350:100")
     >>> str_to_ratio("1,000:276")
     >>> str_to_ratio([1, 2])
     >>> str_to_ratio(['1', '2'])
     >>> str_to_ratio(('1', '2'))
 
-    # Special cases
+    Special cases
     >>> str_to_ratio(('3 ', ' 1'))
     >>> str_to_ratio(('10,000 ', ' 200 '))
     """

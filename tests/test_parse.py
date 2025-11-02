@@ -13,14 +13,14 @@ import pytest
 import strx
 
 
-@pytest.mark.parametrize("str, output", [("1,000,000.00", float(1000000)), ("1000000.00", float(1000000)), ("23,2345,12", float(23234512))])
-def test_easy_seperator(str, output):
-    assert strx.str_to_number(str, decimal_seperator=".", thousand_seperator=",") == output
+@pytest.mark.parametrize("value, output", [("1,000,000.00", float(1000000)), ("1000000.00", float(1000000)), ("23,2345,12", float(23234512))])
+def test_easy_seperator(value, output):
+    assert strx.str_to_number(value, decimal_seperator=".", thousand_seperator=",") == output
 
 
-@pytest.mark.parametrize("str, output", [("231.800.000,00", 231800000)])
-def test_diff_seperator(str, output):
-    assert strx.str_to_number(str, decimal_seperator=",", thousand_seperator=".") == output
+@pytest.mark.parametrize("value, output", [("231.800.000,00", 231800000)])
+def test_diff_seperator(value, output):
+    assert strx.str_to_number(value, decimal_seperator=",", thousand_seperator=".") == output
 
 
 def test_fail_multiple_decimal():
@@ -29,7 +29,7 @@ def test_fail_multiple_decimal():
 
 
 @pytest.mark.parametrize(
-    "val, expected_result",
+    "value, expected_result",
     [
         ("350:100", 350 / 100),
         ("1,000:276", 1000 / 276),
@@ -42,12 +42,12 @@ def test_fail_multiple_decimal():
         (("3 ", " 1"), 3.0),
     ],
 )
-def test_output_desired(val, expected_result):
-    assert strx.str_to_ratio(x=val) == expected_result
+def test_output_desired(value, expected_result):
+    assert strx.str_to_ratio(x=value) == expected_result
 
 
 @pytest.mark.parametrize(
-    "val",
+    "value",
     [
         (None),
         ("10.9,000:276"),
@@ -56,5 +56,5 @@ def test_output_desired(val, expected_result):
         ((3, 4, 5)),
     ],
 )
-def test_failed_parse(val):
-    assert strx.str_to_ratio(x=val) is None
+def test_failed_parse(value):
+    assert strx.str_to_ratio(x=value) is None
