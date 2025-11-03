@@ -2,8 +2,6 @@
 
 # Global
 import re
-import logging
-from typing import Union
 
 
 def str_to_upper(string: str) -> str:
@@ -29,7 +27,8 @@ def str_to_number(string: str, decimal_seperator: str = ".", thousand_seperator:
 
     Usage
     -----
-    >>> str_to_number("1,000,000.00", decimal_seperator=".", thousand_seperator=",")
+    >>> import strx
+    >>> strx.str_to_number("1,000,000.00", decimal_seperator=".", thousand_seperator=",")
     """
 
     # Valid
@@ -60,49 +59,39 @@ def str_to_number(string: str, decimal_seperator: str = ".", thousand_seperator:
         return _tmp
 
 
-def str_to_ratio(x: Union[str, list[Union[str, int]], tuple, None] = None) -> float | None:
+def str_to_ratio(string: str, sep_by: str = ":") -> float | None:
     """Parse string into ratio rate
 
     Args
-        x (str, list[Union[str, int]]): str, list need to parse into ratio
+    ----
+    string (str): string to convert
 
     Return
     ------
-    float: ratio parsed, happy case.
-    None when error when try to cast, or calculation.
-    E.g: Zero Divided, number of elements of list can't parse (greater than 2)
+    Return the parsed ratio as a float if successful, otherwise None if there is an error when trying to cast or calculate,
+        such as ZeroDivisionError or if the number of elements in the list can't be parsed (greater than 2).
 
     Usage
     -----
-    >>> str_to_ratio("350:100")
-    >>> str_to_ratio("1,000:276")
-    >>> str_to_ratio([1, 2])
-    >>> str_to_ratio(['1', '2'])
-    >>> str_to_ratio(('1', '2'))
-
-    Special cases
-    >>> str_to_ratio(('3 ', ' 1'))
-    >>> str_to_ratio(('10,000 ', ' 200 '))
+    >>> import strx
+    >>> strx.str_to_ratio("350:100")
+    3.5
+    >>> strx.str_to_ratio("1,000:276")
+    3.6231884057971016
     """
-    if x is None:
-        return None
 
-    _x: Union[list[str], list[Union[str, int]], tuple] = x.split(":") if isinstance(x, str) else x
-    if len(_x) != 2:
-        logging.exception(
-            f"Can not parse ratio from string components, need 2 elements but exist {len(_x)} elements: [{','.join([_x] if isinstance(_x, str) else [str(e) for e in _x])}]"
-        )
-        return None
+    comp = string.split(sep_by)
+    if len(comp) != 2:
+        raise ValueError(f"Can not parse ratio from string components, need 2 elements but exist {len(comp)} elements: [{string}]")
 
     # Excluded spaces
-    _x = [i.strip() if isinstance(i, str) else i for i in _x]
+    comp = [ele.strip() if isinstance(ele, str) else ele for ele in comp]
 
     try:
-        x0 = str_to_number(_x[0], decimal_seperator=".", thousand_seperator=",") if isinstance(_x[0], str) else _x[0]
-        x1 = str_to_number(_x[1], decimal_seperator=".", thousand_seperator=",") if isinstance(_x[1], str) else _x[1]
-        res = x0 / x1
+        x0 = str_to_number(comp[0], decimal_seperator=".", thousand_seperator=",") if isinstance(comp[0], str) else comp[0]
+        x1 = str_to_number(comp[1], decimal_seperator=".", thousand_seperator=",") if isinstance(comp[1], str) else comp[1]
+        ressult = x0 / x1
     except Exception:
-        logging.exception(f"Error when cast ratio of [{_x[0]}, {_x[1]}]")
-        return None
-
-    return res
+        raise ValueError(f"Error when cast ratio of [{comp[0]}, {comp[1]}]")
+    else:
+        return ressult

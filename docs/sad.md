@@ -55,6 +55,16 @@ Common the `string` argument names in Python string functions
 
 ### `str_to_number` function
 
+At the beginning, the function is to convert string to number that consider 2 following cases, and seperated by the decimal and thousand seperator
+
+- Decimal number: "." then thousand number: ","
+
+- Decimal number: "," then thousand number: "."
+
+But when in usage, the function is hard to remember which one is the decimal and which one is the thousand seperator and hard to debug when look through the codebase.
+
+This lead to the error prones that hit when looking into the errors and try to captures by using languages like regex or others.
+
 #### Decimenal
 
 Radix point
