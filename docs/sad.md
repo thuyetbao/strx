@@ -65,6 +65,17 @@ But when in usage, the function is hard to remember which one is the decimal and
 
 This lead to the error prones that hit when looking into the errors and try to captures by using languages like regex or others.
 
+For examples,
+
+```py
+import strx
+strx.str_to_number("1,000,000.00", decimal_seperator=".", thousand_seperator=",")
+strx.str_to_number("1,000,000.00", decimal_seperator=".", thousand_seperator=".")       # <--- Failure case, raise ValueError but hard to see the cause
+```
+
+And based on this, we can see if we know decimal_seperator, we can get the correct thousand_seperator
+So that, we change to the radix point
+
 #### Decimenal
 
 Radix point
@@ -91,4 +102,52 @@ Propose:
 
 ```py
 strx.str_to_number(string="1,000,000,000", radix=point.DECIMAL)
+```
+
+```
+def str_to_number(string: str, decimal_seperator: str = ".", thousand_seperator: str = ",") -> float:
+    """String to number
+
+    Args
+    ----
+    string (str): The string like the number try to convert
+    decimal_seperator (str, optional): Seperator for decimal part. Default to ",".
+    thousand_seperator (str, optional): Seperator for whole number part. Default to ".".
+
+    Return
+    ------
+    float: The parsing number based on the string
+
+    Usage
+    -----
+    >>> import strx
+    >>> strx.str_to_number("1,000,000.00", decimal_seperator=".", thousand_seperator=",")
+    """
+
+    # Valid
+    if decimal_seperator == thousand_seperator:
+        raise ValueError(f"Seperator of decimal and thousand need to be differentGot decimal_seperator=thousand_seperator={decimal_seperator}")
+
+    # Seperate
+    _sep = re.split(r"\{ds}".format(ds=decimal_seperator), string, maxsplit=1)
+
+    # Component
+    whole_str = _sep[0]
+    whole_num = re.sub(r"\{ts}".format(ts=thousand_seperator), "", whole_str)
+    try:
+        decimal_str = decimal_num = _sep[1]
+    except IndexError:
+        decimal_str = decimal_num = ""
+
+    if re.search(r"\{ds}".format(ds=decimal_seperator), decimal_str) is not None:
+        raise ValueError(f"Existing multiple seperator [`{decimal_seperator}`] on string=[{string}] lead to can't convert decimal part")
+
+    num = whole_num + "." + decimal_num
+
+    try:
+        _tmp = float(num)
+    except ValueError as exc:
+        raise ValueError(f"Parse to float failed related on string=`{string}` by convert element from {str(exc)}")
+    else:
+        return _tmp
 ```

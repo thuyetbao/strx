@@ -1,7 +1,12 @@
 #!/bin/python3
 
 # Global
-import re
+from typing import Literal
+from _constant import RadixPoint
+
+
+radixNameLiteral = Literal["DECIMAL", "COMMA", "THIN_SPACE", "SPACE", "UNDERSCORE", "APOSTROPHE", "HALF_SPACE", "FULL_SPACE"]
+radixSymbolLiteral = Literal[".", ",", " ", " ", "_", "'", ":", ":", "/"]
 
 
 def str_to_upper(string: str) -> str:
@@ -12,7 +17,7 @@ def str_to_lower(string: str) -> str:
     return string.lower()
 
 
-def str_to_number(string: str, decimal_seperator: str = ".", thousand_seperator: str = ",") -> float:
+def str_to_number(string: str, radix: radixNameLiteral | radixSymbolLiteral = "DECIMAL") -> float:
     """String to number
 
     Args
@@ -28,38 +33,15 @@ def str_to_number(string: str, decimal_seperator: str = ".", thousand_seperator:
     Usage
     -----
     >>> import strx
-    >>> strx.str_to_number("1,000,000.00", decimal_seperator=".", thousand_seperator=",")
+    >>> strx.str_to_number("1,000,000.00", radix="DECIMAL")
+    1000000.0
     """
-
-    # Valid
-    if decimal_seperator == thousand_seperator:
-        raise ValueError(f"Seperator of decimal and thousand need to be differentGot decimal_seperator=thousand_seperator={decimal_seperator}")
-
-    # Seperate
-    _sep = re.split(r"\{ds}".format(ds=decimal_seperator), string, maxsplit=1)
-
-    # Component
-    whole_str = _sep[0]
-    whole_num = re.sub(r"\{ts}".format(ts=thousand_seperator), "", whole_str)
-    try:
-        decimal_str = decimal_num = _sep[1]
-    except IndexError:
-        decimal_str = decimal_num = ""
-
-    if re.search(r"\{ds}".format(ds=decimal_seperator), decimal_str) is not None:
-        raise ValueError(f"Existing multiple seperator [`{decimal_seperator}`] on string=[{string}] lead to can't convert decimal part")
-
-    num = whole_num + "." + decimal_num
-
-    try:
-        _tmp = float(num)
-    except ValueError as exc:
-        raise ValueError(f"Parse to float failed related on string=`{string}` by convert element from {str(exc)}")
-    else:
-        return _tmp
+    on_radix = RadixPoint.search(keyword=radix)
+    value = string.replace(on_radix.decimal_point, ".").replace(on_radix.thousand_point, "")
+    return float(value)
 
 
-def str_to_ratio(string: str, sep_by: str = ":") -> float | None:
+def str_to_ratio(string: str, sep_by: str = ":") -> float:
     """Parse string into ratio rate
 
     Args
@@ -88,8 +70,8 @@ def str_to_ratio(string: str, sep_by: str = ":") -> float | None:
     comp = [ele.strip() if isinstance(ele, str) else ele for ele in comp]
 
     try:
-        x0 = str_to_number(comp[0], decimal_seperator=".", thousand_seperator=",") if isinstance(comp[0], str) else comp[0]
-        x1 = str_to_number(comp[1], decimal_seperator=".", thousand_seperator=",") if isinstance(comp[1], str) else comp[1]
+        x0 = str_to_number(comp[0], radix="DECIMAL") if isinstance(comp[0], str) else comp[0]
+        x1 = str_to_number(comp[1], radix="DECIMAL") if isinstance(comp[1], str) else comp[1]
         ressult = x0 / x1
     except Exception:
         raise ValueError(f"Error when cast ratio of [{comp[0]}, {comp[1]}]")

@@ -1,6 +1,8 @@
 # Changelog
 
-## v0.2.9 (2025-03-11)
+## v0.2.12 (2025-11-04)
+
+- [x] Upgraded for the `str_to_number` and `str_to_ratio` function
 
 - [x] Fixed argument names in test cases to avoid name clashes with built-in functions
 

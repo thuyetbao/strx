@@ -9,11 +9,10 @@ class RadixPoint(enum.Enum):
     DECIMAL = (".", ",")
     COMMA = (",", ",")
     THIN_SPACE = ("", ",")
-    SPACE = (" ", ",")
-    UNDERSCORE = ("_", ",")
-    APOSTROPHE = ("'", ",")
     HALF_SPACE = (" ", ",")
     FULL_SPACE = (" ", ",")
+    UNDERSCORE = ("_", ",")
+    APOSTROPHE = ("'", ",")
 
     def __init__(self, symbol: str, thousand_point: str):
         self.symbol = symbol
@@ -23,7 +22,9 @@ class RadixPoint(enum.Enum):
     def __str__(self):
         return self.symbol
 
-
-# from typing import Literal
-
-# Literal["DECIMAL", "COMMA", "THIN_SPACE", "SPACE", "UNDERSCORE", "APOSTROPHE", "HALF_SPACE", "FULL_SPACE"]
+    @classmethod
+    def search(cls, keyword: str) -> "RadixPoint":
+        for mem in cls:
+            if keyword == mem.symbol or keyword == mem.name:
+                return mem
+        raise ValueError(f"Can not find radix point with keyword: {keyword}")
