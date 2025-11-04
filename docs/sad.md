@@ -2,7 +2,9 @@
 
 ## **Overview**
 
-`strx` is the package to support various tasks when working with strings.
+The `strx` package is designed as a lightweight, extensible toolkit for structured string processing and transformation. It provides a unified interface for handling common string-related tasks such as normalization, conversion, parsing, and formatting, with a strong focus on reliability.
+
+The core philosophy behind `strx` is to treat string manipulation as a predictable, type-safe operation. By combining Python’s type hints, clear error handling, and registry-based extensibility (e.g., locale-aware numeric parsing), `strx` aims to improve code clarity, reduce parsing errors, and standardize string handling across diverse use cases such as finance, localization, and data ingestion.
 
 ## **Key components**
 
@@ -55,6 +57,36 @@ Common the `string` argument names in Python string functions
 
 ### `str_to_number` function
 
+The function try to convert the formatted number to float.
+
+For the previous years, I has been use the term of `decimal_seperator` and `thousand_seperator`
+
+The function required to known the radix point (simmilar to decimal seperator) and delimiter (simmilar to thousand seperator) to define the way to handle the underlying method.
+
+For explaintation:
+
+a radix point or radix character is a symbol used in the display of numbers to separate the integer part of the value from its fractional part (In mathematics and computing, ).
+
+```txt
+1000000000.00
+          .            <-- Radix Point
+XXXXXXXXXX             <-- Integer Part
+           RRR         <-- Fractional Part
+```
+
+In English and many other languages (including many that are written right-to-left), the integer part is at the left of the radix point, and the fraction part at the right of it.
+
+Based on that, the following pipeline is used to define the flow of the function
+
+![wikipedia-world-conventions-on-decimal-seperators](assets/images/wikipedia-world-conventions-on-decimal-seperators.png)
+
+Propose:
+
+```py
+i
+strx.str_to_number(string="1,000,000,000", radix=point.DOT)
+```
+
 At the beginning, the function is to convert string to number that consider 2 following cases, and seperated by the decimal and thousand seperator
 
 - Decimal number: "." then thousand number: ","
@@ -73,17 +105,6 @@ strx.str_to_number("1,000,000.00", decimal_seperator=".", thousand_seperator=","
 strx.str_to_number("1,000,000.00", decimal_seperator=".", thousand_seperator=".")       # <--- Failure case, raise ValueError but hard to see the cause
 ```
 
-And based on this, we can see if we know decimal_seperator, we can get the correct thousand_seperator
-So that, we change to the radix point
-
-#### Decimenal
-
-Radix point
-
-In mathematics and computing, a radix point or radix character is a symbol used in the display of numbers to separate the integer part of the value from its fractional part. In English and many other languages (including many that are written right-to-left), the integer part is at the left of the radix point, and the fraction part at the right of it.
-
-A radix point is most often used in decimal (base 10) notation, when it is more commonly called the decimal point (with deci- indicating base 10). In English-speaking countries, the decimal point is usually a small dot (.) placed either on the baseline, or halfway between the baseline and the top of the digits (·) In many other countries, the radix point is a comma (,) placed on the baseline.
-
 These conventions are generally used both in machine displays (printing, computer monitors) and in handwriting. It is important to know which notation is being used when working in different software programs. The respective ISO 31-0 standard defines both the comma and the small dot as decimal markers, but does not explicitly define universal radix marks for bases other than 10.
 
 Fractional numbers are rarely displayed in other number bases, but, when they are, a radix character may be used for the same purpose. When used with the binary (base 2) representation, it may be called "binary point".
@@ -97,57 +118,3 @@ For ease of reading, numbers with many digits (e.g. numbers over 999) may be div
 <https://docs.oracle.com/cd/E19455-01/806-0169/overview-9/index.html>
 
 <https://en.wikipedia.org/wiki/Decimal_separator#:~:text=Radix%20point,-In%20mathematics%20and&text=In%20English%2Dspeaking%20countries%2C%20the,%2C)%20placed%20on%20the%20baseline.>
-
-Propose:
-
-```py
-strx.str_to_number(string="1,000,000,000", radix=point.DECIMAL)
-```
-
-```
-def str_to_number(string: str, decimal_seperator: str = ".", thousand_seperator: str = ",") -> float:
-    """String to number
-
-    Args
-    ----
-    string (str): The string like the number try to convert
-    decimal_seperator (str, optional): Seperator for decimal part. Default to ",".
-    thousand_seperator (str, optional): Seperator for whole number part. Default to ".".
-
-    Return
-    ------
-    float: The parsing number based on the string
-
-    Usage
-    -----
-    >>> import strx
-    >>> strx.str_to_number("1,000,000.00", decimal_seperator=".", thousand_seperator=",")
-    """
-
-    # Valid
-    if decimal_seperator == thousand_seperator:
-        raise ValueError(f"Seperator of decimal and thousand need to be differentGot decimal_seperator=thousand_seperator={decimal_seperator}")
-
-    # Seperate
-    _sep = re.split(r"\{ds}".format(ds=decimal_seperator), string, maxsplit=1)
-
-    # Component
-    whole_str = _sep[0]
-    whole_num = re.sub(r"\{ts}".format(ts=thousand_seperator), "", whole_str)
-    try:
-        decimal_str = decimal_num = _sep[1]
-    except IndexError:
-        decimal_str = decimal_num = ""
-
-    if re.search(r"\{ds}".format(ds=decimal_seperator), decimal_str) is not None:
-        raise ValueError(f"Existing multiple seperator [`{decimal_seperator}`] on string=[{string}] lead to can't convert decimal part")
-
-    num = whole_num + "." + decimal_num
-
-    try:
-        _tmp = float(num)
-    except ValueError as exc:
-        raise ValueError(f"Parse to float failed related on string=`{string}` by convert element from {str(exc)}")
-    else:
-        return _tmp
-```
