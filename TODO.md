@@ -4,8 +4,4 @@
 
 - [ ] Portable functions in [Function reference in `stringr`](https://stringr.tidyverse.org/reference/index.html)
 
-- [ ] Add coverage and testing with the components
-
-- [ ] Add badge: download, coverage test
-
-- [ ] Implement cov-dev
+- [ ] Add test and coverage using `code-cov`. See: <https://docs.codecov.com/docs/github-0-setting-up-the-repository> and add badge: download, coverage test
