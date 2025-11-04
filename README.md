@@ -29,6 +29,10 @@
   <a href="https://github.com/features/actions" target="_blank">
     <img src="https://img.shields.io/badge/cicd-github--action-teal?logo=github-actions" alt="Github Action">
   </a>
+  <br>
+  <a href="https://codecov.io/gh/thuyetbao/strx" >
+    <img src="https://codecov.io/gh/thuyetbao/strx/graph/badge.svg?token=M8KZX4XFSZ" alt="Codecov Coverage">
+  </a>
 </div>
 
 ---
@@ -62,7 +66,6 @@ For general string manipulation
 ```py
 strx.str_length
 strx.str_sub
-
 strx.str_trim
 strx.str_reverse
 strx.str_detect
@@ -80,10 +83,9 @@ strx.str_dup
 strx.str_c
 strx.str_extract
 strx.str_extract_all
-
 ```
 
-Convert string to other format
+Convert string to general cases
 
 ```py
 strx.str_to_upper
@@ -94,8 +96,17 @@ strx.str_to_title
 Convert string into numeric (float, int) and ratio
 
 ```py
-strx.str_to_number
-strx.str_to_ratio
+strx.str_to_number("1,000,000.00", radix=".", delimiter=",")
+1000000.0
+
+strx.str_to_number("1.000.000,00", radix=",", delimiter=".")
+1000000.0
+
+strx.str_to_number("1_000_000,00", radix=",", delimiter="_")
+1000000.0
+
+strx.str_to_ratio("350:100")
+3.5
 ```
 
 **Documentation**:

@@ -2,9 +2,6 @@ name: Package - Test
 
 on:
   push:
-    branches:
-      - main
-      - feat/cicd-badge-test
     paths:
       - "strx/*.py"
       - "tests/**"

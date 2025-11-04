@@ -1,8 +1,8 @@
 # Changelog
 
-## v0.2.14 (2025-11-xx)
+## v0.2.14 (2025-11-05)
 
-- [x] (cicd) Added the codecov coverage for test suite of package
+- [x] (cicd) Added the codecov coverage for test suite of package, added bagde on README
 
 - [x] Updated documentation for the packges related.
 
