@@ -16,8 +16,10 @@ The namespace try to make with very consistent API like following
 
 ```py
 import strx
-strx.str_lower()
-strx.str_upper()
+
+# Transform
+strx.str_to_lower()
+strx.str_to_upper()
 
 # Convert to another types
 strx.str_to_number()
@@ -57,59 +59,61 @@ Common the `string` argument names in Python string functions
 
 ### `str_to_number` function
 
-The function try to convert the formatted number to float.
+The `str_to_number` function converts formatted numeric strings into floating-point values.
+It is designed to handle locale-specific conventions for decimal (radix) and thousand (delimiter) separators in a consistent and extensible manner.
 
-For the previous years, I has been use the term of `decimal_seperator` and `thousand_seperator`
+Different locales and formatting styles use varying symbols to separate decimal and digit groups.
+To correctly interpret these formats, the function must explicitly identify:
 
-The function required to known the radix point (simmilar to decimal seperator) and delimiter (simmilar to thousand seperator) to define the way to handle the underlying method.
+- **Radix point (`radix`)** — the symbol that separates the integer and fractional parts of a number. Common examples include `"."` (dot) or `","` (comma).
 
-For explaintation:
+  Example:
 
-a radix point or radix character is a symbol used in the display of numbers to separate the integer part of the value from its fractional part (In mathematics and computing, ).
+  ```txt
+  1000000000.00
+          ↑
+          Radix point separating integer and fractional parts
+  ```
 
-```txt
-1000000000.00
-          .            <-- Radix Point
-XXXXXXXXXX             <-- Integer Part
-           RRR         <-- Fractional Part
-```
+- **Delimiter (`delimiter`)** — the symbol used to group digits within the integer part for readability (e.g., thousands, millions).
+  Typical delimiters include `","`, `"."`, `" "`, `" "`, `"_"`, or `"’"`. For example: `1,000,000` or `21_450`.
 
-In English and many other languages (including many that are written right-to-left), the integer part is at the left of the radix point, and the fraction part at the right of it.
+Earlier implementations used parameters named `decimal_separator` and `thousand_separator`.
+While functional, this approach was error-prone and difficult to maintain, as developers often confused which symbol applied to which part.
 
-Based on that, the following pipeline is used to define the flow of the function
+Example of ambiguity:
 
-![wikipedia-world-conventions-on-decimal-seperators](assets/images/wikipedia-world-conventions-on-decimal-seperators.png)
-
-Propose:
-
-```py
-i
-strx.str_to_number(string="1,000,000,000", radix=point.DOT)
-```
-
-At the beginning, the function is to convert string to number that consider 2 following cases, and seperated by the decimal and thousand seperator
-
-- Decimal number: "." then thousand number: ","
-
-- Decimal number: "," then thousand number: "."
-
-But when in usage, the function is hard to remember which one is the decimal and which one is the thousand seperator and hard to debug when look through the codebase.
-
-This lead to the error prones that hit when looking into the errors and try to captures by using languages like regex or others.
-
-For examples,
-
-```py
+```python
 import strx
-strx.str_to_number("1,000,000.00", decimal_seperator=".", thousand_seperator=",")
-strx.str_to_number("1,000,000.00", decimal_seperator=".", thousand_seperator=".")       # <--- Failure case, raise ValueError but hard to see the cause
+
+strx.str_to_number("1,000,000.00", decimal_separator=".", thousand_separator=",")   # ✅ Works
+strx.str_to_number("1,000,000.00", decimal_separator=".", thousand_separator=".")   # ❌ Fails – ambiguous usage
 ```
 
-These conventions are generally used both in machine displays (printing, computer monitors) and in handwriting. It is important to know which notation is being used when working in different software programs. The respective ISO 31-0 standard defines both the comma and the small dot as decimal markers, but does not explicitly define universal radix marks for bases other than 10.
+Such naming made the logic harder to debug and the cause of conversion failures less transparent.
 
-Fractional numbers are rarely displayed in other number bases, but, when they are, a radix character may be used for the same purpose. When used with the binary (base 2) representation, it may be called "binary point".
+To simplify configuration and reduce human error, `strx` introduces a clearer terminology and stricter validation system:
 
-For ease of reading, numbers with many digits (e.g. numbers over 999) may be divided into groups using a delimiter,[30] such as comma (,), dot (.), half-space or thin space (" "), space (" "), underscore (\_; as in maritime "21_450"),[citation needed] or apostrophe ('). In some countries, these "digit group separators" are only employed to the left of the decimal separator; in others, they are also used to separate numbers with a long fractional part. An important reason for grouping is that it allows rapid judgement of the number of digits, via telling at a glance ("subitizing") rather than counting (contrast, for example, 100 000 000 with 100000000 for one hundred million).
+- Replace `decimal_separator` and `thousand_separator` with standardized parameters:
+
+  - `radix` → defines the decimal separator (radix point).
+  - `delimiter` → defines the digit grouping separator.
+
+The function validates that both symbols are distinct to prevent incorrect parsing.
+
+Example:
+
+```python
+strx.str_to_number("1,000,000.00", radix="DOT", delimiter="COMMA")
+```
+
+If the `radix` and `delimiter` conflict, the function raises a descriptive `ValueError`, explicitly indicating the cause.
+
+Based on differents countries conventions, the `radix` and `delimiter` can be:
+
+![Wikipedia – World conventions on decimal separators](assets/images/wikipedia-world-conventions-on-decimal-seperators.png)
+
+The `strx` package provides a global constant, `LOCALE_STYLES`, to support various locales. This constant is a dictionary that maps a locale string to its corresponding radix and delimiter. For example, `LOCALE_STYLES["en_US"]` would return a dictionary with the radix set to `"."` and the delimiter set to `","`.
 
 **Reference**:
 

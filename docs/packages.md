@@ -11,7 +11,7 @@ The following tables is the list of packages related to `strx` package:
 | Package    | Language | Description                                                   | Link                                   |
 | ---------- | -------- | ------------------------------------------------------------- | -------------------------------------- |
 | stringr    | R        | Package for string manipulation in R                          | <https://stringr.tidyverse.org/>       |
-| snakecase  | R        | Fresh and straightforward approach on case conversion e       | <https://github.com/Tazinho/snakecase> |
+| snakecase  | R        | Fresh and straightforward approach on case conversion         | <https://github.com/Tazinho/snakecase> |
 | tidystring | Python   | Easier string operations in Python, inspired by the tidyverse | <https://pypi.org/project/tidystring/> |
 
 ### **Functions workloads**
