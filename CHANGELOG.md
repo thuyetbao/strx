@@ -1,5 +1,13 @@
 # Changelog
 
+## v0.2.14 (2025-11-xx)
+
+- [x] (cicd) Added the codecov coverage for test suite of package
+
+- [x] Updated documentation for the packges related.
+
+- [x] Added function `str_to_title`
+
 ## v0.2.12 (2025-11-04)
 
 - [x] Updated documentation and README document

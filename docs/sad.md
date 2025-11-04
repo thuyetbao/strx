@@ -17,11 +17,11 @@ The namespace try to make with very consistent API like following
 ```py
 import strx
 
-# Transform
+# Convert to transform
 strx.str_to_lower()
 strx.str_to_upper()
 
-# Convert to another types
+# Convert to numeric types
 strx.str_to_number()
 strx.str_to_ratio()
 ```

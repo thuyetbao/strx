@@ -14,31 +14,56 @@ The following tables is the list of packages related to `strx` package:
 | snakecase  | R        | Fresh and straightforward approach on case conversion         | <https://github.com/Tazinho/snakecase> |
 | tidystring | Python   | Easier string operations in Python, inspired by the tidyverse | <https://pypi.org/project/tidystring/> |
 
-### **Functions workloads**
+## **Functions workloads**
 
-The following table is the list of functions related to `strx` package:
+The following table is the list of functions compare to `strx` package:
 
-| **Functions (`strx`)** | **stringr**     | **tidystring**  | **snakecase**               |
-| ---------------------- | --------------- | --------------- | --------------------------- |
-| strx.str_length        | str_length      | —               | —                           |
-| strx.str_sub           | str_sub         | —               | —                           |
-| strx.str_to_upper      | toUpperCase     | str_to_upper    | —                           |
-| strx.str_to_lower      | toLowerCase     | str_to_lower    | —                           |
-| strx.str_trim          | str_trim        | str_trim        | —                           |
-| strx.str_reverse       | str_reverse     | —               | —                           |
-| strx.str_detect        | str_detect      | str_detect      | —                           |
-| strx.str_snakecase     | to_snake_case   | —               | to_snake_case / to_any_case |
-| strx.str_remove        | str_remove      | str_remove      | —                           |
-| strx.str_replace       | str_replace     | str_replace     | —                           |
-| strx.str_replace_all   | str_replace_all | str_replace_all | —                           |
-| strx.str_pad           | str_pad         | —               | —                           |
-| strx.str_split         | str_split       | str_split       | —                           |
-| strx.str_count         | str_count       | str_count       | —                           |
-| strx.str_which         | str_which       | str_which       | —                           |
-| strx.str_sort          | str_sort        | str_sort        | —                           |
-| strx.str_unique        | str_unique      | —               | —                           |
-| strx.str_dup           | str_dup         | str_dup         | —                           |
-| strx.str_c             | str_c           | str_concat      | —                           |
-| strx.str_extract       | str_extract     | str_extract     | —                           |
-| strx.str_extract_all   | str_extract_all | str_extract_all | —                           |
-| strx.str_to_number     | str_to_number   | —               | —                           |
+| **`strx`**      | **`stringr`**   | **`tidystring`**  | **`snakecase`**             |
+| --------------- | --------------- | ----------------- | --------------------------- |
+| str_length      | str_length      | str_length        | —                           |
+| str_sub         | str_sub         | str_sub           | —                           |
+| str_trim        | str_trim        | str_trim          | —                           |
+| str_reverse     | str_reverse     | —                 | —                           |
+| str_detect      | str_detect      | str_detect        | —                           |
+| str_snakecase   | to_snake_case   | —                 | to_snake_case / to_any_case |
+| str_remove      | str_remove      | str_remove        | —                           |
+| str_replace     | str_replace     | str_replace       | —                           |
+| str_replace_all | str_replace_all | str_replace_all   | —                           |
+| str_pad         | str_pad         | —                 | —                           |
+| str_split       | str_split       | str_split         | —                           |
+| str_count       | str_count       | str_count         | —                           |
+| str_which       | str_which       | str_which         | —                           |
+| str_sort        | str_sort        | str_sort          | —                           |
+| str_unique      | str_unique      | —                 | —                           |
+| str_dup         | str_dup         | str_dup           | —                           |
+| str_c           | str_c           | str_concat        | —                           |
+| str_extract     | str_extract     | str_extract       | —                           |
+| str_extract_all | str_extract_all | str_extract_all   | —                           |
+| str_to_number   | str_to_number   | —                 | —                           |
+| --              | --              | str_wrap          | —                           |
+| str_to_title    | --              | str_to_title      | —                           |
+| str_to_upper    | toUpperCase     | str_to_upper      | —                           |
+| str_to_lower    | toLowerCase     | str_to_lower      | —                           |
+| --              | --              | str_locate        | —                           |
+| --              | --              | str_locate_all    | —                           |
+| --              | --              | str_match         | —                           |
+| --              | --              | str_match_all     | —                           |
+| --              | --              | str_glue          | —                           |
+| --              | --              | str_order         | —                           |
+| --              | --              | str_subset        | —                           |
+| --              | --              | str_which         | —                           |
+| --              | --              | str_squish        | —                           |
+| --              | --              | str_flatten       | —                           |
+| --              | --              | str_startswith    | —                           |
+| --              | --              | str_endswith      | —                           |
+| --              | --              | str_upper_cut     | —                           |
+| --              | --              | str_search_apply  | —                           |
+| --              | --              | str_dash_to_space | —                           |
+
+## **Philosophy**
+
+### **tidystring**
+
+- Insprired with the `stringr` package and other related: `siuba`, `pyjanitor`
+
+- Features can set with `pandas`, which required dependencies of `pandas` package

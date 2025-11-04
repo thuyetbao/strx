@@ -2,6 +2,9 @@ name: Package - Test
 
 on:
   push:
+    branches:
+      - main
+      - feat/cicd-badge-test
     paths:
       - "strx/*.py"
       - "tests/**"
@@ -37,7 +40,9 @@ jobs:
           uv pip install "$(cat requirements-dev.txt | grep hatch)" --system;
 
       - name: Test package
-        run: |
+        run: hatch run test
 
-          # Run
-          hatch run test tests;
+      - name: Upload coverage reports to Codecov
+        uses: codecov/codecov-action@v5
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
