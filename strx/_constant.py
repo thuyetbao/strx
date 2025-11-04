@@ -14,7 +14,7 @@ class EnumurationRadix(enum.Enum):
         self.point = symbol
         self.delimiter = delimiter
 
-    def __str__(self):
+    def __str__(self):  # pragma: no cover
         return self.symbol
 
     @classmethod
@@ -38,7 +38,7 @@ class EnumurationDelimiter(enum.Enum):
     def __init__(self, symbol: str):
         self.symbol = symbol
 
-    def __str__(self):
+    def __str__(self):  # pragma: no cover
         return self.symbol
 
     @classmethod

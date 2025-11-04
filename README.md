@@ -69,7 +69,7 @@ strx.str_sub
 strx.str_trim
 strx.str_reverse
 strx.str_detect
-strx.str_snakcase
+strx.str_snakecase
 strx.str_remove
 strx.str_replace
 strx.str_replace_all
