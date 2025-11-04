@@ -3,6 +3,7 @@
 # Global
 import sys
 import os
+import math
 
 sys.path.append(os.path.abspath(os.curdir))
 
@@ -14,32 +15,47 @@ import strx
 
 
 @pytest.mark.parametrize(
-    "val, expected_result",
+    "value, radix, delimiter, output",
     [
-        ("350:100", 350 / 100),
-        ("1,000:276", 1000 / 276),
-        ([1, 2], 0.5),
-        (["1", "2"], 0.5),
-        (("1", "3"), 1 / 3),
-        ((2, "3"), 2 / 3),
-        (("10,000 : 200"), 10000 / 200),
-        (("15,300", " 60 "), 15300 / 60),
-        (("3 ", " 1"), 3.0),
+        ("1,000,000.00", "DOT", "auto", float(1000000)),
+        ("1000000.00", "DOT", "auto", float(1000000)),
+        ("23,234,512", "DOT", "auto", float(23234512)),
+        ("231.800.000,00", "COMMA", "auto", float(231800000)),
+        ("11.345,00", "COMMA", "DOT", float(11345)),
+        ("92,245.00", "DOT", "COMMA", float(92245)),
+        ("87672,00", "COMMA", "THIN_SPACE", float(87672)),
+        ("75 224 192,00", "COMMA", "HALF_SPACE", float(75224192)),
+        ("66 666,00", "COMMA", "FULL_SPACE", float(66666)),
+        ("1_000_000,00", "COMMA", "UNDERSCORE", float(1000000)),
+        ("720'055,00", "COMMA", "APOSTROPHE", float(720055)),
     ],
 )
-def test_output_desired(val, expected_result):
-    assert strx.str_to_ratio(x=val) == expected_result
+def test_parse_number_success(value, radix, delimiter, output):
+    assert math.isclose(strx.str_to_number(value, radix=radix, delimiter=delimiter), output)
+
+
+def test_parse_number_failure_on_multiple_decimal():
+    with pytest.raises(ValueError):
+        strx.str_to_number("19242.00.00", radix="DOT")
+
+
+def test_parse_number_failure_on_same_radix_and_delimiter():
+    with pytest.raises(ValueError):
+        strx.str_to_number("1000,000.00", radix="DOT", delimiter="DOT")
 
 
 @pytest.mark.parametrize(
-    "val",
+    "value, sep_by, output",
     [
-        (None),
-        ("10.9,000:276"),
-        (["9000.0.0000", 2]),
-        ([(1, 2, 1), 30]),
-        ((3, 4, 5)),
+        ("350:100", ":", 350 / 100),
+        ("1,000:276", ":", 1000 / 276),
+        ("345.0/44", "/", 345 / 44),
     ],
 )
-def test_failed_parse(val):
-    assert strx.str_to_ratio(x=val) is None
+def test_parse_ratio_success(value, sep_by, output):
+    assert math.isclose(strx.str_to_ratio(string=value, sep_by=sep_by), output)
+
+
+def test_parse_ratio_failure_by_denominator_is_zero():
+    with pytest.raises(ZeroDivisionError):
+        strx.str_to_ratio("350:0")

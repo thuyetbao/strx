@@ -1,10 +1,8 @@
 #!/bin/python3
 
-from .method import (
+from .transform import (
     str_length,
     str_sub,
-    str_to_upper,
-    str_to_lower,
     str_trim,
     str_reverse,
     str_detect,
@@ -25,6 +23,8 @@ from .method import (
 )
 
 from .convert import (
+    str_to_upper,
+    str_to_lower,
     str_to_number,
     str_to_ratio,
 )
@@ -33,9 +33,6 @@ from .normalize import (
     str_normalize,
 )
 
-from .compose import (
-    str_md5_surrogate_key,
-)
 
 __all__ = [
     "str_length",
@@ -62,7 +59,6 @@ __all__ = [
     "str_to_number",
     "str_to_ratio",
     "str_normalize",
-    "str_md5_surrogate_key",
 ]
 
-__version__ = "0.1.2"
+__version__ = "0.2.12"

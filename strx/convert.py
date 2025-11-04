@@ -1,19 +1,77 @@
 #!/bin/python3
 
 # Global
-import re
-import logging
-from typing import Union, Optional
+from typing import Literal, Callable
+from ._constant import EnumurationRadix, EnumurationDelimiter
 
 
-def str_to_number(string: str, decimal_seperator: str = ".", thousand_seperator: str = ",") -> float:
-    """String to number
+radixPointLiteral = Literal["DOT", "COMMA", ".", ","]
+delimiterLiteral = Literal["DOT", "COMMA", "THIN_SPACE", "HALF_SPACE", "FULL_SPACE", "UNDERSCORE", "APOSTROPHE", ".", ",", "", " ", " ", "_", "'"]
+
+
+LOCALE_STYLES = {
+    # --- English-based locales ---
+    "en_US": {"radix": "DOT", "delimiter": "COMMA"},  # 1,000,000.50
+    "en_GB": {"radix": "DOT", "delimiter": "COMMA"},
+    "en_CA": {"radix": "DOT", "delimiter": "COMMA"},
+    "en_AU": {"radix": "DOT", "delimiter": "COMMA"},
+    "en_IN": {"radix": "DOT", "delimiter": "COMMA"},  # 1,00,000.00 (Indian pattern)
+    # --- European locales ---
+    "fr_FR": {"radix": "COMMA", "delimiter": "SPACE"},  # 1 000 000,50
+    "de_DE": {"radix": "COMMA", "delimiter": "DOT"},  # 1.000.000,50
+    "es_ES": {"radix": "COMMA", "delimiter": "DOT"},  # 1.000.000,50
+    "it_IT": {"radix": "COMMA", "delimiter": "DOT"},
+    "nl_NL": {"radix": "COMMA", "delimiter": "DOT"},
+    "pt_PT": {"radix": "COMMA", "delimiter": "DOT"},
+    "sv_SE": {"radix": "COMMA", "delimiter": "SPACE"},
+    "no_NO": {"radix": "COMMA", "delimiter": "SPACE"},
+    "da_DK": {"radix": "COMMA", "delimiter": "DOT"},
+    "fi_FI": {"radix": "COMMA", "delimiter": "SPACE"},
+    "pl_PL": {"radix": "COMMA", "delimiter": "SPACE"},
+    "cs_CZ": {"radix": "COMMA", "delimiter": "SPACE"},
+    "hu_HU": {"radix": "COMMA", "delimiter": "SPACE"},
+    "tr_TR": {"radix": "COMMA", "delimiter": "DOT"},
+    # --- Asian locales ---
+    "vi_VN": {"radix": "COMMA", "delimiter": "DOT"},  # 1.000.000,00
+    "th_TH": {"radix": "DOT", "delimiter": "COMMA"},
+    "ja_JP": {"radix": "DOT", "delimiter": "COMMA"},  # 1,000,000.50
+    "ko_KR": {"radix": "DOT", "delimiter": "COMMA"},
+    "zh_CN": {"radix": "DOT", "delimiter": "COMMA"},
+    "zh_TW": {"radix": "DOT", "delimiter": "COMMA"},
+    "id_ID": {"radix": "COMMA", "delimiter": "DOT"},  # 1.000.000,50
+    # --- Middle Eastern / Arabic locales ---
+    "fa_IR": {"radix": "COMMA", "delimiter": "DOT"},
+    "he_IL": {"radix": "DOT", "delimiter": "COMMA"},
+    # --- Latin American locales ---
+    "es_MX": {"radix": "DOT", "delimiter": "COMMA"},
+    "es_AR": {"radix": "COMMA", "delimiter": "DOT"},
+    "pt_BR": {"radix": "COMMA", "delimiter": "DOT"},
+    # --- African locales ---
+    "en_ZA": {"radix": "DOT", "delimiter": "SPACE"},  # 1 000 000.50
+    "fr_SN": {"radix": "COMMA", "delimiter": "SPACE"},
+}
+
+
+def str_to_upper(string: str) -> str:
+    return string.upper()
+
+
+def str_to_lower(string: str) -> str:
+    return string.lower()
+
+
+def str_to_number(
+    string: str,
+    radix: radixPointLiteral = "DOT",
+    delimiter: Literal["auto"] | delimiterLiteral = "auto",
+) -> float:
+    """Convert string to number
 
     Args
     ----
     string (str): The string like the number try to convert
-    decimal_seperator (str, optional): Seperator for decimal part. Default to ",".
-    thousand_seperator (str, optional): Seperator for whole number part. Default to ".".
+    radix (str, optional): Radix point that seperated the decimal part and fractional part. Default to dot (.).
+    delimiter (str): Delimiter that seperated the whole number part. Default to "auto".
 
     Return
     ------
@@ -21,78 +79,92 @@ def str_to_number(string: str, decimal_seperator: str = ".", thousand_seperator:
 
     Usage
     -----
-    >>> str_to_number("1,000,000.00", decimal_seperator=".", thousand_seperator=",")
+
+    Basic usage
+    >>> str_to_number("1,000,000.00", radix="DOT")
+    1000000.0
+    >>> str_to_number("1_000_000.00", radix="DOT", delimiter="_")
+    1000000.0
+    >>> str_to_number("1_000_000.00", radix="DOT", delimiter="_")
+    1000000.0
+
+    For some default resolved locales. The registry default is supplied to easy use for various common countries.
+    Supported values can be found on `list(LOCALE_STYLES)`
+
+    >>> str_to_number("1.000.000,00", **LOCALE_STYLES["en_US"])
+    1000000.0
+    >>> str_to_number("1,000,000.00", **LOCALE_STYLES["vi_VN"])
+    1000000.0
     """
+    if not isinstance(string, str):
+        raise TypeError(f"Required value of type 'str', got {type(string).__name__!r}.")
 
-    # Valid
-    if decimal_seperator == thousand_seperator:
-        raise ValueError(f"Seperator of decimal and thousand need to be differentGot decimal_seperator=thousand_seperator={decimal_seperator}")
+    on_radix = EnumurationRadix.search(keyword=radix)
+    on_delimiter = EnumurationDelimiter.search(on_radix.delimiter if delimiter == "auto" else delimiter)
 
-    # Seperate
-    _sep = re.split(r"\{ds}".format(ds=decimal_seperator), string, maxsplit=1)
+    if on_radix.point == delimiter:
+        raise ValueError(f"The radix point cannot be the same as the delimiterGot radix={on_radix.name} ({on_radix.point}), delimiter={delimiter} ({on_delimiter.symbol})")
 
-    # Component
-    whole_str = _sep[0]
-    whole_num = re.sub(r"\{ts}".format(ts=thousand_seperator), "", whole_str)
-    try:
-        decimal_str = decimal_num = _sep[1]
-    except IndexError:
-        decimal_str = decimal_num = ""
-
-    if re.search(r"\{ds}".format(ds=decimal_seperator), decimal_str) is not None:
-        raise ValueError(f"Existing multiple seperator [`{decimal_seperator}`] on string=[{string}] lead to can't convert decimal part")
-
-    num = whole_num + "." + decimal_num
-
-    try:
-        _tmp = float(num)
-    except ValueError as exc:
-        raise ValueError(f"Parse to float failed related on string=`{string}` by convert element from {str(exc)}")
-    else:
-        return _tmp
+    value = string.strip().replace(on_delimiter.symbol, "").replace(on_radix.point, ".")
+    return float(value)
 
 
-def str_to_ratio(x: Union[str, list[Union[str, int]], tuple, None] = None) -> Optional[float]:
-    """Parse string into ratio rate
+def str_to_ratio(string: str, sep_by: str = ":", convert_func: Callable[..., float] = str_to_number) -> float:
+    """Convert string to ratio
 
-    Arguments
-        x (str, list[Union[str, int]]): str, list need to parse into ratio
+    Args
+    ----
+    string (str): String to convert
+    sep_by (str, optional): Separator between numerator and denominator. Defaults to ":".
+    convert_func (Callable, optional): Function to convert parts to float. Defaults to `str_to_number`.
+
 
     Return
-        float: ratio parsed, happy case.
-        None when error when try to cast, or calculation.
-        E.g: Zero Divided, number of elements of list can't parse (greater than 2)
+    ------
+    float: The parsed ratio
+
+    Raises
+    ------
+    TypeError: If input is not a string.
+    ValueError: If format is invalid or parts cannot be converted.
+    ZeroDivisionError: If denominator is zero.
 
     Usage
+    -----
+
+    Default usage
     >>> str_to_ratio("350:100")
+    3.5
     >>> str_to_ratio("1,000:276")
-    >>> str_to_ratio([1, 2])
-    >>> str_to_ratio(['1', '2'])
-    >>> str_to_ratio(('1', '2'))
+    3.6231884057971016
 
-    # Special cases
-    >>> str_to_ratio(('3 ', ' 1'))
-    >>> str_to_ratio(('10,000 ', ' 200 '))
+    With different separator
+    >>> str_to_ratio("345.0/44", sep_by="/")
+    7.75
+
+    With different convert function
+    >>> str_to_ratio("44:100", convert_func=float)
+    3.5
+
+    Fail to denominator is zero
+    >>> str_to_ratio("350:0")
+    Traceback (most recent call last):
+      ...
+    ZeroDivisionError: Cannot divide by zero in ratio '350:0'.
     """
-    if x is None:
-        return None
+    if not isinstance(string, str):
+        raise TypeError(f"Required value of type 'str', got {type(string).__name__!r}.")
 
-    _x: Union[list[str], list[Union[str, int]], tuple] = x.split(":") if isinstance(x, str) else x
-    if len(_x) != 2:
-        logging.exception(
-            f"Can not parse ratio from string components, need 2 elements but exist {len(_x)} elements: [{','.join([_x] if isinstance(_x, str) else [str(e) for e in _x])}]"
-        )
-        return None
-
-    # Excluded spaces
-    _x = [i.strip() if isinstance(i, str) else i for i in _x]
+    parts = string.split(sep_by)
+    if len(parts) != 2:
+        raise ValueError(f"Invalid ratio format: expected exactly 2 parts separated by {sep_by!r}, but found {len(parts)} in {string!r}.")
 
     try:
-        x0 = str_to_number(_x[0], decimal_seperator=".", thousand_seperator=",") if isinstance(_x[0], str) else _x[0]
-        x1 = str_to_number(_x[1], decimal_seperator=".", thousand_seperator=",") if isinstance(_x[1], str) else _x[1]
-        res = x0 / x1
-    except Exception:
-        logging.exception(f"Error when cast ratio of [{_x[0]}, {_x[1]}]")
-        return None
+        numerator, denominator = (convert_func(p.strip()) for p in parts)
+    except Exception as exc:
+        raise ValueError(f"Failed to convert ratio parts using {convert_func.__name__}: {exc}") from exc
 
-    return res
+    if denominator == 0:
+        raise ZeroDivisionError(f"Cannot divide by zero in ratio {string!r}.")
+
+    return numerator / denominator

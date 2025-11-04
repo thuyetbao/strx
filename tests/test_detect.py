@@ -16,7 +16,7 @@ import strx
 
 
 @pytest.mark.parametrize(
-    "string, pattern",
+    "value, pattern",
     [
         ("350:100", re.compile(r"\d+")),
         ("There are 10 persons", re.compile(r"\d+")),
@@ -24,16 +24,16 @@ import strx
         ("There are exist date on year 2022", re.compile(r"\d{4}$")),
     ],
 )
-def test_true_detect(string, pattern):
-    assert strx.str_detect(string, pattern) is True
+def test_true_detect(value, pattern):
+    assert strx.str_detect(value, pattern) is True
 
 
 @pytest.mark.parametrize(
-    "string, pattern",
+    "value, pattern",
     [
         ("Not exist any number", re.compile(r"\d+")),
         ("- Failed first character, need to be +", re.compile(r"^\+")),
     ],
 )
-def test_failed_detect(string, pattern):
-    assert strx.str_detect(string, pattern) is False
+def test_failed_detect(value, pattern):
+    assert strx.str_detect(value, pattern) is False

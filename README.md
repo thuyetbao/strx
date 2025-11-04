@@ -33,11 +33,15 @@
 
 ---
 
-### **strx** Features
+### **strx** features
 
 - Consistent API with `str_` prefix functions
 
-### **Usage**
+- Strict type checking: All functions use precise type hints to ensure safety and early error detection.
+
+<!-- - Comprehensive test suite with 100% coverage and zero errors -->
+
+### **Installation**
 
 Install package from PyPI distribution [`strx`](https://pypi.org/project/strx/)
 
@@ -45,7 +49,11 @@ Install package from PyPI distribution [`strx`](https://pypi.org/project/strx/)
 pip install strx
 ```
 
-<!-- ```py
+### **Usage**
+
+All functions in stringr start with `str_*` and take a `string` as the first argument:
+
+```py
 import strx
 
 # Get
@@ -71,7 +79,8 @@ strx.str_c
 strx.str_extract
 strx.str_extract_all
 strx.str_to_number
-``` -->
+strx.str_to_number
+```
 
 **Documentation**:
 
