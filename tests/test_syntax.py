@@ -3,6 +3,7 @@
 # Global
 import sys
 import os
+import re
 
 # Path
 sys.path.append(os.path.abspath(os.curdir))
@@ -15,36 +16,40 @@ import strx
 
 
 @pytest.mark.parametrize(
-    "func",
+    "func, kwargs",
     [
-        strx.str_length,
-        # strx.str_sub,
-        strx.str_trim,
-        strx.str_reverse,
-        # strx.str_detect,
-        strx.str_snakecase,
-        # strx.str_remove,
-        # strx.str_replace,
-        # strx.str_replace_all,
-        # strx.str_pad,
-        # strx.str_split,
-        # strx.str_count,
-        # strx.str_which,
-        strx.str_sort,
-        strx.str_unique,
-        # strx.str_dup,
-        strx.str_c,
-        # strx.str_extract,
-        # strx.str_extract_all,
-        strx.str_to_upper,
-        strx.str_to_lower,
-        strx.str_to_title,
-        strx.str_to_number,
-        strx.str_to_ratio,
-        strx.str_normalize,
+        (strx.str_length, None),
+        (strx.str_sub, {"start": 0, "end": None}),
+        (strx.str_trim, None),
+        (strx.str_reverse, None),
+        (strx.str_detect, {"pattern": re.compile(r"\d+")}),
+        (strx.str_snakecase, None),
+        (strx.str_remove, {"pattern": re.compile(r"\d+")}),
+        (strx.str_replace, {"pattern": re.compile(r"\d+"), "replacement": ""}),
+        (strx.str_replace_all, {"pattern": re.compile(r"\d+"), "replacement": ""}),
+        (strx.str_pad, {"width": 10, "side": "right", "pad": "0"}),
+        (strx.str_split, {"delimiter": ","}),
+        (strx.str_count, {"pattern": re.compile(r"\d+")}),
+        (strx.str_which, {"pattern": re.compile(r"\d+")}),
+        (strx.str_sort, {"descending": True}),
+        (strx.str_unique, None),
+        (strx.str_dup, {"times": 2}),
+        (strx.str_c, {"sep": ","}),
+        (strx.str_extract, {"pattern": re.compile(r"\d+")}),
+        (strx.str_extract_all, {"pattern": re.compile(r"\d+")}),
+        (strx.str_to_upper, None),
+        (strx.str_to_lower, None),
+        (strx.str_to_title, None),
+        (strx.str_to_number, {"radix": "DOT"}),
+        (strx.str_to_ratio, {"sep_by": ":"}),
+        (strx.str_normalize, {"form": "NFC"}),
     ],
 )
-def test_type_error_for_non_string_inputs(func):
+def test_failure_on_failure_input_on_argument_string(func, kwargs):
+    failure_input = 9090909
     with pytest.raises(TypeError) as excinfo:
-        func(123)
+        if kwargs is None:
+            func(string=failure_input)
+        else:
+            func(string=failure_input, **kwargs)
     assert "Required value of type 'str'" in str(excinfo.value)
