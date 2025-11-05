@@ -29,6 +29,10 @@
   <a href="https://github.com/features/actions" target="_blank">
     <img src="https://img.shields.io/badge/cicd-github--action-teal?logo=github-actions" alt="Github Action">
   </a>
+  <br>
+  <a href="https://codecov.io/gh/thuyetbao/strx" >
+    <img src="https://codecov.io/gh/thuyetbao/strx/graph/badge.svg?token=M8KZX4XFSZ" alt="Codecov Coverage">
+  </a>
 </div>
 
 ---

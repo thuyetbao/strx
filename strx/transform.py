@@ -51,7 +51,7 @@ def str_detect(string: str, pattern: str) -> bool:
     return bool(re.search(pattern, string))
 
 
-def str_snakcase(string: str) -> str:
+def str_snakecase(string: str) -> str:
     """Snake case component
 
     Args

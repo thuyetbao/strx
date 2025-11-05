@@ -10,13 +10,13 @@ delimiterLiteral = Literal["DOT", "COMMA", "THIN_SPACE", "HALF_SPACE", "FULL_SPA
 
 
 LOCALE_STYLES = {
-    # --- English-based locales ---
+    # English-based locales
     "en_US": {"radix": "DOT", "delimiter": "COMMA"},  # 1,000,000.50
     "en_GB": {"radix": "DOT", "delimiter": "COMMA"},
     "en_CA": {"radix": "DOT", "delimiter": "COMMA"},
     "en_AU": {"radix": "DOT", "delimiter": "COMMA"},
     "en_IN": {"radix": "DOT", "delimiter": "COMMA"},  # 1,00,000.00 (Indian pattern)
-    # --- European locales ---
+    # European locales
     "fr_FR": {"radix": "COMMA", "delimiter": "SPACE"},  # 1 000 000,50
     "de_DE": {"radix": "COMMA", "delimiter": "DOT"},  # 1.000.000,50
     "es_ES": {"radix": "COMMA", "delimiter": "DOT"},  # 1.000.000,50
@@ -31,7 +31,7 @@ LOCALE_STYLES = {
     "cs_CZ": {"radix": "COMMA", "delimiter": "SPACE"},
     "hu_HU": {"radix": "COMMA", "delimiter": "SPACE"},
     "tr_TR": {"radix": "COMMA", "delimiter": "DOT"},
-    # --- Asian locales ---
+    # Asian locales
     "vi_VN": {"radix": "COMMA", "delimiter": "DOT"},  # 1.000.000,00
     "th_TH": {"radix": "DOT", "delimiter": "COMMA"},
     "ja_JP": {"radix": "DOT", "delimiter": "COMMA"},  # 1,000,000.50
@@ -39,25 +39,35 @@ LOCALE_STYLES = {
     "zh_CN": {"radix": "DOT", "delimiter": "COMMA"},
     "zh_TW": {"radix": "DOT", "delimiter": "COMMA"},
     "id_ID": {"radix": "COMMA", "delimiter": "DOT"},  # 1.000.000,50
-    # --- Middle Eastern / Arabic locales ---
+    # Middle Eastern / Arabic locales
     "fa_IR": {"radix": "COMMA", "delimiter": "DOT"},
     "he_IL": {"radix": "DOT", "delimiter": "COMMA"},
-    # --- Latin American locales ---
+    # Latin American locales
     "es_MX": {"radix": "DOT", "delimiter": "COMMA"},
     "es_AR": {"radix": "COMMA", "delimiter": "DOT"},
     "pt_BR": {"radix": "COMMA", "delimiter": "DOT"},
-    # --- African locales ---
+    # African locales
     "en_ZA": {"radix": "DOT", "delimiter": "SPACE"},  # 1 000 000.50
     "fr_SN": {"radix": "COMMA", "delimiter": "SPACE"},
 }
 
 
 def str_to_upper(string: str) -> str:
+    if not isinstance(string, str):
+        raise TypeError(f"Required value of type 'str', got {type(string).__name__!r}.")
     return string.upper()
 
 
 def str_to_lower(string: str) -> str:
+    if not isinstance(string, str):
+        raise TypeError(f"Required value of type 'str', got {type(string).__name__!r}.")
     return string.lower()
+
+
+def str_to_title(string: str) -> str:
+    if not isinstance(string, str):
+        raise TypeError(f"Required value of type 'str', got {type(string).__name__!r}.")
+    return string.title()
 
 
 def str_to_number(
@@ -117,7 +127,6 @@ def str_to_ratio(string: str, sep_by: str = ":", convert_func: Callable[..., flo
     string (str): String to convert
     sep_by (str, optional): Separator between numerator and denominator. Defaults to ":".
     convert_func (Callable, optional): Function to convert parts to float. Defaults to `str_to_number`.
-
 
     Return
     ------

@@ -29,13 +29,17 @@
   <a href="https://github.com/features/actions" target="_blank">
     <img src="https://img.shields.io/badge/cicd-github--action-teal?logo=github-actions" alt="Github Action">
   </a>
+  <br>
+  <a href="https://codecov.io/gh/thuyetbao/strx" >
+    <img src="https://codecov.io/gh/thuyetbao/strx/graph/badge.svg?token=M8KZX4XFSZ" alt="Codecov Coverage">
+  </a>
 </div>
 
 ---
 
 ### **strx** features
 
-- Consistent API with `str_` prefix functions
+- Consistent API: All functions start with `str_*` prefix and take a `string` as the first argument
 
 - Strict type checking: All functions use precise type hints to ensure safety and early error detection.
 
@@ -51,20 +55,21 @@ pip install strx
 
 ### **Usage**
 
-All functions in stringr start with `str_*` and take a `string` as the first argument:
+Import into the script
 
 ```py
 import strx
+```
 
-# Get
+For general string manipulation
+
+```py
 strx.str_length
 strx.str_sub
-strx.str_to_upper
-strx.str_to_lower
 strx.str_trim
 strx.str_reverse
 strx.str_detect
-strx.str_snakcase
+strx.str_snakecase
 strx.str_remove
 strx.str_replace
 strx.str_replace_all
@@ -78,8 +83,30 @@ strx.str_dup
 strx.str_c
 strx.str_extract
 strx.str_extract_all
-strx.str_to_number
-strx.str_to_number
+```
+
+Convert string to general cases
+
+```py
+strx.str_to_upper
+strx.str_to_lower
+strx.str_to_title
+```
+
+Convert string into numeric (float, int) and ratio
+
+```py
+strx.str_to_number("1,000,000.00", radix=".", delimiter=",")
+1000000.0
+
+strx.str_to_number("1.000.000,00", radix=",", delimiter=".")
+1000000.0
+
+strx.str_to_number("1_000_000,00", radix=",", delimiter="_")
+1000000.0
+
+strx.str_to_ratio("350:100")
+3.5
 ```
 
 **Documentation**:

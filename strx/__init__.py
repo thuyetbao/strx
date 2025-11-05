@@ -6,7 +6,7 @@ from .transform import (
     str_trim,
     str_reverse,
     str_detect,
-    str_snakcase,
+    str_snakecase,
     str_remove,
     str_replace,
     str_replace_all,
@@ -25,6 +25,7 @@ from .transform import (
 from .convert import (
     str_to_upper,
     str_to_lower,
+    str_to_title,
     str_to_number,
     str_to_ratio,
 )
@@ -37,12 +38,10 @@ from .normalize import (
 __all__ = [
     "str_length",
     "str_sub",
-    "str_to_upper",
-    "str_to_lower",
     "str_trim",
     "str_reverse",
     "str_detect",
-    "str_snakcase",
+    "str_snakecase",
     "str_remove",
     "str_replace",
     "str_replace_all",
@@ -56,9 +55,12 @@ __all__ = [
     "str_c",
     "str_extract",
     "str_extract_all",
+    "str_to_upper",
+    "str_to_lower",
+    "str_to_title",
     "str_to_number",
     "str_to_ratio",
     "str_normalize",
 ]
 
-__version__ = "0.2.12"
+__version__ = "0.2.14"
