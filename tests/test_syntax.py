@@ -48,6 +48,7 @@ import strx
 def test_failure_on_failure_input_on_argument_string(func, kwargs):
     failure_input = 9090909
     with pytest.raises(TypeError) as excinfo:
+        # Dispatch
         if kwargs is None:
             func(string=failure_input)
         else:

@@ -1,5 +1,11 @@
 # Changelog
 
+## v0.3.1 (2025-11-xx)
+
+- [x] (func) Rewrote the function `str_normalize` with added documentation and updated error handling for invalid form arguments.
+
+- [x] (test) Fully coverage test suite
+
 ## v0.2.14 (2025-11-05)
 
 - [x] (cicd) Added the codecov coverage for test suite of package, added bagde on README
