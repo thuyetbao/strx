@@ -1,10 +1,12 @@
 # Changelog
 
-## v0.3.1 (2025-11-xx)
+## v0.3.1 (2025-11-06)
 
 - [x] (func) Rewrote the function `str_normalize` with added documentation and updated error handling for invalid form arguments.
 
 - [x] (test) Fully coverage test suite
+
+- [x] (chore) Updated README for document
 
 ## v0.2.14 (2025-11-05)
 

@@ -39,11 +39,11 @@
 
 ### **strx** features
 
-- Consistent API: All functions start with `str_*` prefix and take a `string` as the first argument
+- **Consistent API**: All functions start with `str_*` prefix and take a `string` as the first argument
 
-- Strict type checking: All functions use precise type hints to ensure safety and early error detection.
+- **Strict type checking**: All functions use precise type hints to ensure safety and early error detection.
 
-<!-- - Comprehensive test suite with 100% coverage and zero errors -->
+- **Comprehensive test suite**: 100% coverage and zero errors
 
 ### **Installation**
 
@@ -107,7 +107,7 @@ strx.str_to_title("strx")
 "Strx"
 ```
 
-Convert string into numeric (float, int) and ratio
+Convert string into numeric (float, int)
 
 ```py
 strx.str_to_number("1,000,000.00", radix=".", delimiter=",")
@@ -118,9 +118,16 @@ strx.str_to_number("1.000.000,00", radix=",", delimiter=".")
 
 strx.str_to_number("1_000_000,00", radix=",", delimiter="_")
 1000000.0
+```
 
+or convert string into ratio
+
+```py
 strx.str_to_ratio("350:100")
 3.5
+
+strx.str_to_ratio("88/8", sep_by="/")
+11.0
 ```
 
 **Documentation**:
