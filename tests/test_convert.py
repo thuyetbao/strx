@@ -15,6 +15,36 @@ import strx
 
 
 @pytest.mark.parametrize(
+    "value, output",
+    [
+        ("The quick brown fox jumps over the lazy dog.", "THE QUICK BROWN FOX JUMPS OVER THE LAZY DOG."),
+    ],
+)
+def test_upper(value, output):
+    assert strx.str_to_upper(string=value) == output
+
+
+@pytest.mark.parametrize(
+    "value, output",
+    [
+        ("The quick brown fox jumps over the lazy dog.", "the quick brown fox jumps over the lazy dog."),
+    ],
+)
+def test_lower(value, output):
+    assert strx.str_to_lower(string=value) == output
+
+
+@pytest.mark.parametrize(
+    "value, output",
+    [
+        ("The quick brown fox jumps over the lazy dog.", "The Quick Brown Fox Jumps Over The Lazy Dog."),
+    ],
+)
+def test_title(value, output):
+    assert strx.str_to_title(string=value) == output
+
+
+@pytest.mark.parametrize(
     "value, radix, delimiter, output",
     [
         ("1,000,000.00", "DOT", "auto", float(1000000)),

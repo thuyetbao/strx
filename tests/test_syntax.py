@@ -34,7 +34,6 @@ import strx
         (strx.str_sort, {"descending": True}),
         (strx.str_unique, None),
         (strx.str_dup, {"times": 2}),
-        (strx.str_c, {"sep": ","}),
         (strx.str_extract, {"pattern": re.compile(r"\d+")}),
         (strx.str_extract_all, {"pattern": re.compile(r"\d+")}),
         (strx.str_to_upper, None),

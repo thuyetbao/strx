@@ -36,7 +36,7 @@ The following table is the list of functions compare to `strx` package:
 | str_sort        | str_sort        | str_sort          | —                           |
 | str_unique      | str_unique      | —                 | —                           |
 | str_dup         | str_dup         | str_dup           | —                           |
-| str_c           | str_c           | str_concat        | —                           |
+| str_concat      | str_c           | str_concat        | —                           |
 | str_extract     | str_extract     | str_extract       | —                           |
 | str_extract_all | str_extract_all | str_extract_all   | —                           |
 | str_to_number   | str_to_number   | —                 | —                           |

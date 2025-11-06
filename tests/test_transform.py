@@ -25,6 +25,53 @@ def test_length(value, output):
 
 
 @pytest.mark.parametrize(
+    "value, start, end, output",
+    [
+        ("The quick brown fox jumps over the lazy dog.", 0, 3, "The"),
+        ("The quick brown fox jumps over the lazy dog.", None, None, "The quick brown fox jumps over the lazy dog."),
+        ("The quick brown fox jumps over the lazy dog.", 10, -29, "brown"),
+    ],
+)
+def test_sub(value, start, end, output):
+    assert strx.str_sub(string=value, start=start, end=end) == output
+
+
+@pytest.mark.parametrize(
+    "value, output",
+    [
+        ("", ""),
+        ("element", "tnemele"),
+        ("Hello, World!", "!dlroW ,olleH"),
+    ],
+)
+def test_reverse(value, output):
+    assert strx.str_reverse(string=value) == output
+
+
+@pytest.mark.parametrize(
+    "value, pattern, output",
+    [
+        ("Hello, World!", "o", "Hell, World!"),
+        ("Hello, World!", "!", "Hello, World"),
+        ("Hello, World!", "z", "Hello, World!"),
+        ("", "a", ""),
+        ("abcde", "bc", "ade"),
+        ("abcde", "cd", "abe"),
+        ("abcde", "ef", "abcde"),
+        ("abcde", "g", "abcde"),
+        ("12345", "2", "1345"),
+        ("12345", "4", "1235"),
+        ("12345", "6", "12345"),
+        ("12345", "7", "12345"),
+        ("12345", "8", "12345"),
+        ("12345", "9", "12345"),
+    ],
+)
+def test_remove(value, pattern, output):
+    assert strx.str_remove(string=value, pattern=pattern) == output
+
+
+@pytest.mark.parametrize(
     "value, output",
     [
         ("The quick brown fox jumps over the lazy dog.", "The quick brown fox jumps over the lazy dog."),
@@ -32,36 +79,6 @@ def test_length(value, output):
 )
 def test_trim(value, output):
     assert strx.str_trim(string=value) == output
-
-
-@pytest.mark.parametrize(
-    "value, output",
-    [
-        ("The quick brown fox jumps over the lazy dog.", "THE QUICK BROWN FOX JUMPS OVER THE LAZY DOG."),
-    ],
-)
-def test_upper(value, output):
-    assert strx.str_to_upper(string=value) == output
-
-
-@pytest.mark.parametrize(
-    "value, output",
-    [
-        ("The quick brown fox jumps over the lazy dog.", "the quick brown fox jumps over the lazy dog."),
-    ],
-)
-def test_lower(value, output):
-    assert strx.str_to_lower(string=value) == output
-
-
-@pytest.mark.parametrize(
-    "value, output",
-    [
-        ("The quick brown fox jumps over the lazy dog.", "The Quick Brown Fox Jumps Over The Lazy Dog."),
-    ],
-)
-def test_title(value, output):
-    assert strx.str_to_title(string=value) == output
 
 
 @pytest.mark.parametrize(
@@ -84,16 +101,25 @@ def test_snakecase(value, output):
     assert strx.str_snakecase(string=value) == output
 
 
-# @pytest.mark.parametrize(
-#     "value, width, side, pad, output",
-#     [
-#         ("The quick brown fox jumps over the lazy dog.", 44, "right", " ", "The quick brown fox jumps over the lazy dog."),
-#         ("The quick brown fox jumps over the lazy dog.", 44, "left", " ", " The quick brown fox jumps over the lazy dog."),
-#         ("The quick brown fox jumps over the lazy dog.", 44, "both", " ", "  The quick brown fox jumps over the lazy dog.  "),
-#     ],
-# )
-# def test_pad(value, width, side, pad, output):
-#     assert strx.str_pad(string=value, width=width, side=side, pad=pad) == output
+@pytest.mark.parametrize(
+    "value, width, side, pad, output",
+    [
+        ("abc", 10, "right", " ", "abc       "),
+        ("abc", 10, "left", " ", "       abc"),
+        ("abc", 10, "both", " ", "   abc    "),
+        ("abc", 2, "right", " ", "abc"),
+        ("abc", 2, "left", " ", "abc"),
+        ("abc", 2, "both", " ", "abc"),
+        ("12345", 6, "right", "0", "123450"),
+        ("12345", 6, "left", "0", "012345"),
+        ("12345", 6, "both", "0", "123450"),
+        ("12345", 2, "right", "z", "12345"),
+        ("12345", 2, "left", "z", "12345"),
+        ("12345", 2, "both", "z", "12345"),
+    ],
+)
+def test_pad(value, width, side, pad, output):
+    assert strx.str_pad(string=value, width=width, side=side, pad=pad) == output
 
 
 @pytest.mark.parametrize(
@@ -151,11 +177,15 @@ def test_dup(value, times, output):
     assert strx.str_dup(string=value, times=times) == output
 
 
-# @pytest.mark.parametrize(
-#     "value, sep, output",
-#     [
-#         ("The quick brown fox jumps over the lazy dog.", "-", "The-quick-brown-fox-jumps-over-the-lazy-dog"),
-#     ],
-# )
-# def test_c(value, sep, output):
-#     assert strx.str_c(string=value, sep=sep) == output
+@pytest.mark.parametrize(
+    "value, sep, output",
+    [
+        (
+            ["The", "quick", "brown", "fox", "jumps", "over", "the", "lazy", "dog."],
+            " ",
+            "The quick brown fox jumps over the lazy dog.",
+        )
+    ],
+)
+def test_c(value, sep, output):
+    assert strx.str_concat(*value, sep=sep) == output

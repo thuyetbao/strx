@@ -18,12 +18,12 @@ The namespace try to make with very consistent API like following
 import strx
 
 # Convert to transform
-strx.str_to_lower()
-strx.str_to_upper()
+strx.str_to_lower
+strx.str_to_upper
 
 # Convert to numeric types
-strx.str_to_number()
-strx.str_to_ratio()
+strx.str_to_number
+strx.str_to_ratio
 ```
 
 ### Agrument namepsace

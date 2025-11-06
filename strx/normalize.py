@@ -18,19 +18,19 @@ _UNICODE_GENERAL_PUNCTUATION = {
 }
 
 
-def str_normalize(string: str, form: Literal["NFC", "NFD", "NFKC", "NFKD"] = "NFKC") -> str:
+def str_normalize(string: str, form: Literal["NFC", "NFD", "NFKC", "NFKD"] = "NFKC", strip: bool = True) -> str:
     """Normalize string
 
     Methodology
     -----------
-    List of apply element:
+    The following steps will be applied to string:
     1) Normalize with form format
     2) Translate string with table of punctuation. See: _UNICODE_GENERAL_PUNCTUATION
     3) Remove multiple component into single component, which:
         - colon (:)
         - comma (,)
         - space ( )
-    5) Strip both for context
+    4) (Optional) Strip both direction of the ouput for content
 
     Usage
     -----
@@ -48,6 +48,7 @@ def str_normalize(string: str, form: Literal["NFC", "NFD", "NFKC", "NFKD"] = "NF
     stmt = re.sub(r"\,{2,}", ",", stmt)
     stmt = re.sub(r"\:{2,}", ":", stmt)
     stmt = re.sub(r"\s{2,}", " ", stmt)
-    stmt = stmt.strip()
+    if strip:
+        stmt = stmt.strip()
 
     return stmt
