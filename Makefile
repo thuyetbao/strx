@@ -98,5 +98,7 @@ clean:
 	@find ./ -maxdepth 1 -type d -name '.ruff_cache' | xargs --no-run-if-empty rm -rf;
 	@echo -e "\t[+] Remove coverage test";
 	@find ./ -type f -name '*.coverage' -delete;
+	@echo -e "\t[+] Remove html coverage test from \`code-cov\` module";
+	@find ./ -maxdepth 1 -type d -name 'htmlcov' | xargs --no-run-if-empty rm -rf;
 	@echo "";
 	@echo -e "\e[32m[Status] Cleared successfully\e[0m";

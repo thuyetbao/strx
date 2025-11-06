@@ -90,7 +90,7 @@ def str_replace_all(string: str, pattern: str, replacement: str) -> str:
     return re.sub(pattern, replacement, string)
 
 
-def str_pad(string: str, width: int, side: str = "right", pad: str = " ") -> str:
+def str_pad(string: str, width: int, side: typing.Literal["left", "right", "both"] = "right", pad: str = " ") -> str:
     if not isinstance(string, str):
         raise TypeError(f"Required value of type 'str', got {type(string).__name__!r}.")
     pad_len = width - len(string)
@@ -100,7 +100,7 @@ def str_pad(string: str, width: int, side: str = "right", pad: str = " ") -> str
         return pad * pad_len + string
     elif side == "right":
         return string + pad * pad_len
-    elif side == "both":
+    elif side == "both":  # pragma: no cover
         left = pad_len // 2
         right = pad_len - left
         return pad * left + string + pad * right
@@ -144,7 +144,7 @@ def str_dup(string: str, times: int) -> str:
 
 def str_concat(*string: typing.Iterable[str], sep: str = " ") -> str:
     if not all([isinstance(_s, str) for _s in string]):
-        raise TypeError("Required iterable value of type 'str'")
+        raise ValueError("Required iterable value of type 'str'")
     return sep.join(string)
 
 

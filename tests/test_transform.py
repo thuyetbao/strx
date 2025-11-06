@@ -132,35 +132,36 @@ def test_count(value, pattern, output):
     assert strx.str_count(string=value, pattern=pattern) == output
 
 
-# @pytest.mark.parametrize(
-#     "value, pattern, output",
-#     [
-#         ("The quick brown fox jumps over the lazy dog.", "fox", 6),
-#     ],
-# )
-# def test_which(value, pattern, output):
-#     assert strx.str_which(string=value, pattern=pattern) == output
+@pytest.mark.parametrize(
+    "value, pattern, output",
+    [
+        ("The quick brown fox jumps over the lazy dog.", " ", 3),
+    ],
+)
+def test_which(value, pattern, output):
+    assert strx.str_which(string=value, pattern=pattern) == output
 
 
-# @pytest.mark.parametrize(
-#     "value, descending, output",
-#     [
-#         ("The quick brown fox jumps over the lazy dog.", False, "brown dog fox jumps lazy over quick The"),
-#         ("The quick brown fox jumps over the lazy dog.", True, "The quick brown fox jumps over the lazy dog."),
-#     ],
-# )
-# def test_sort(value, descending, output):
-#     assert strx.str_sort(string=value, descending=descending) == output
+@pytest.mark.parametrize(
+    "value, descending, output",
+    [
+        ("0123456", False, "0123456"),
+        ("0123456", True, "6543210"),
+    ],
+)
+def test_sort(value, descending, output):
+    assert strx.str_sort(string=value, descending=descending) == output
 
 
-# @pytest.mark.parametrize(
-#     "value, output",
-#     [
-#         ("The quick brown fox jumps over the lazy dog.", "Thequickbrownfoxjumps-overthelazydog"),
-#     ],
-# )
-# def test_unique(value, output):
-#     assert strx.str_unique(string=value) == output
+@pytest.mark.parametrize(
+    "value, output",
+    [
+        ("kkkiw", "kiw"),
+        ("0000123456789", "0123456789"),
+    ],
+)
+def test_unique(value, output):
+    assert strx.str_unique(string=value) == output
 
 
 @pytest.mark.parametrize(
@@ -187,5 +188,76 @@ def test_dup(value, times, output):
         )
     ],
 )
-def test_c(value, sep, output):
+def test_concat(value, sep, output):
     assert strx.str_concat(*value, sep=sep) == output
+
+
+def testfailure_not_is_interable_string_in_concat():
+    with pytest.raises(ValueError):
+        strx.str_concat([1, "value_is_string", 8], sep=" ")
+
+
+@pytest.mark.parametrize(
+    "value, pattern, replacement, output",
+    [
+        ("The quick brown fox jumps over the lazy dog.", "fox", "cat", "The quick brown cat jumps over the lazy dog."),
+        ("The quick brown fox jumps over the lazy dog.", "dog", "cat", "The quick brown fox jumps over the lazy cat."),
+        ("The quick brown fox jumps over the lazy dog.", "cat", "dog", "The quick brown fox jumps over the lazy dog."),
+        ("", "fox", "cat", ""),
+        ("abcde", "bc", "xy", "axyde"),
+        ("abcde", "cd", "xy", "abxye"),
+        ("12345", "2", "x", "1x345"),
+        ("12345", "4", "x", "123x5"),
+    ],
+)
+def test_replace(value, pattern, replacement, output):
+    assert strx.str_replace(string=value, pattern=pattern, replacement=replacement) == output
+
+
+@pytest.mark.parametrize(
+    "value, pattern, replacement, output",
+    [
+        ("The quick brown fox jumps over the lazy dog.", "fox", "cat", "The quick brown cat jumps over the lazy dog."),
+        ("The quick brown fox jumps over the lazy dog.", "dog", "cat", "The quick brown fox jumps over the lazy cat."),
+        ("The quick brown fox jumps over the lazy dog.", "cat", "dog", "The quick brown fox jumps over the lazy dog."),
+        ("", "fox", "cat", ""),
+        ("abcde", "bc", "xy", "axyde"),
+        ("abcde", "cd", "xy", "abxye"),
+        ("12345", "2", "x", "1x345"),
+        ("12345", "4", "x", "123x5"),
+    ],
+)
+def test_replace_all(value, pattern, replacement, output):
+    assert strx.str_replace_all(string=value, pattern=pattern, replacement=replacement) == output
+
+
+@pytest.mark.parametrize(
+    "value, pattern, output",
+    [
+        ("The quick brown fox jumps over the lazy dog.", "fox", "fox"),
+        ("The quick brown fox jumps over the lazy dog.", "dog", "dog"),
+        ("The quick brown fox jumps over the lazy dog.", "cat", None),
+        ("", "fox", None),
+        ("abcde", "bc", "bc"),
+        ("12345", "2", "2"),
+        ("12345", "4", "4"),
+    ],
+)
+def test_extract(value, pattern, output):
+    assert strx.str_extract(string=value, pattern=pattern) == output
+
+
+@pytest.mark.parametrize(
+    "value, pattern, output",
+    [
+        ("The quick brown fox jumps over the lazy dog.", "fox", ["fox"]),
+        ("The quick brown fox jumps over the lazy dog.", "dog", ["dog"]),
+        ("The quick brown fox jumps over the lazy dog.", "cat", []),
+        ("", "fox", []),
+        ("abcde", "bc", ["bc"]),
+        ("12345", "2", ["2"]),
+        ("12345", "4", ["4"]),
+    ],
+)
+def test_extract_all(value, pattern, output):
+    assert strx.str_extract_all(string=value, pattern=pattern) == output
