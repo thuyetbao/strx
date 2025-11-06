@@ -2,8 +2,8 @@
 
 # Global
 import re
-from typing import Union
 import string as lib_string
+import typing
 
 
 def str_length(string: str) -> int:
@@ -12,7 +12,7 @@ def str_length(string: str) -> int:
     return len(string)
 
 
-def str_sub(string: str, start: int, end: Union[int, None] = None) -> str:
+def str_sub(string: str, start: int | None, end: int | None = None) -> str:
     if not isinstance(string, str):
         raise TypeError(f"Required value of type 'str', got {type(string).__name__!r}.")
     return string[start:end]
@@ -25,7 +25,7 @@ def str_trim(string: str) -> str:
 
 
 def str_reverse(string: str) -> str:
-    """Reversed any string
+    """Reverse string
 
     Args
     ----
@@ -90,23 +90,20 @@ def str_replace_all(string: str, pattern: str, replacement: str) -> str:
     return re.sub(pattern, replacement, string)
 
 
-def str_pad(string: str, width: int, side: str = "right", pad: str = " ") -> str:
+def str_pad(string: str, width: int, side: typing.Literal["left", "right", "both"] = "right", pad: str = " ") -> str:
     if not isinstance(string, str):
         raise TypeError(f"Required value of type 'str', got {type(string).__name__!r}.")
-    padded = []
-    if len(string) >= width:
-        padded.append(string)
-    else:
-        pad_len = width - len(string)
-        if side == "left":
-            padded.append(pad * pad_len + string)
-        elif side == "right":
-            padded.append(string + pad * pad_len)
-        elif side == "both":
-            left = pad_len // 2
-            right = pad_len - left
-            padded.append(pad * left + string + pad * right)
-    return padded[0]
+    pad_len = width - len(string)
+    if pad_len <= 0:
+        return string
+    if side == "left":
+        return pad * pad_len + string
+    elif side == "right":
+        return string + pad * pad_len
+    elif side == "both":  # pragma: no cover
+        left = pad_len // 2
+        right = pad_len - left
+        return pad * left + string + pad * right
 
 
 def str_split(string: str, delimiter: str) -> list[str]:
@@ -145,13 +142,13 @@ def str_dup(string: str, times: int) -> str:
     return string * times
 
 
-def str_c(string: str, sep: str = "") -> str:
-    if not isinstance(string, str):
-        raise TypeError(f"Required value of type 'str', got {type(string).__name__!r}.")
+def str_concat(*string: typing.Iterable[str], sep: str = " ") -> str:
+    if not all([isinstance(_s, str) for _s in string]):
+        raise ValueError("Required iterable value of type 'str'")
     return sep.join(string)
 
 
-def str_extract(string: str, pattern: str) -> Union[str, None]:
+def str_extract(string: str, pattern: str) -> str | None:
     if not isinstance(string, str):
         raise TypeError(f"Required value of type 'str', got {type(string).__name__!r}.")
     match = re.search(pattern, string)

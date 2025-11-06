@@ -112,7 +112,7 @@ def str_to_number(
     on_radix = EnumurationRadix.search(keyword=radix)
     on_delimiter = EnumurationDelimiter.search(on_radix.delimiter if delimiter == "auto" else delimiter)
 
-    if on_radix.point == delimiter:
+    if on_radix.point == on_delimiter.symbol:
         raise ValueError(f"The radix point cannot be the same as the delimiterGot radix={on_radix.name} ({on_radix.point}), delimiter={delimiter} ({on_delimiter.symbol})")
 
     value = string.strip().replace(on_delimiter.symbol, "").replace(on_radix.point, ".")

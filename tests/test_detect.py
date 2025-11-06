@@ -25,7 +25,7 @@ import strx
     ],
 )
 def test_true_detect(value, pattern):
-    assert strx.str_detect(value, pattern) is True
+    assert strx.str_detect(string=value, pattern=pattern) is True
 
 
 @pytest.mark.parametrize(
@@ -36,4 +36,4 @@ def test_true_detect(value, pattern):
     ],
 )
 def test_failed_detect(value, pattern):
-    assert strx.str_detect(value, pattern) is False
+    assert strx.str_detect(string=value, pattern=pattern) is False

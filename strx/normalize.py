@@ -3,14 +3,52 @@
 # Global
 import re
 import unicodedata
+from typing import Literal
 
 
-def str_normalize(string: str) -> str:
+# Unicode General Punctuation: https://en.wikipedia.org/wiki/General_Punctuation
+_UNICODE_GENERAL_PUNCTUATION = {
+    ord("‘"): ord("'"),
+    ord("’"): ord("'"),
+    ord("–"): ord("-"),
+    ord("—"): ord("-"),
+    ord(" "): ord(" "),
+    ord("“"): ord('"'),
+    ord("”"): ord('"'),
+}
+
+
+def str_normalize(string: str, form: Literal["NFC", "NFD", "NFKC", "NFKD"] = "NFKC", strip: bool = True) -> str:
+    """Normalize string
+
+    Methodology
+    -----------
+    The following steps will be applied to string:
+    1) Normalize with form format
+    2) Translate string with table of punctuation. See: _UNICODE_GENERAL_PUNCTUATION
+    3) Remove multiple component into single component, which:
+        - colon (:)
+        - comma (,)
+        - space ( )
+    4) (Optional) Strip both direction of the ouput for content
+
+    Usage
+    -----
+    >>> str_normalize("The quick brown fox jumps over the lazy dog.")
+    'The quick brown fox jumps over the lazy dog.'
+    >>> str_normalize("“The quick brown fox jumps over the lazy dog.”")
+    'The quick brown fox jumps over the lazy dog.'
+    """
+
     if not isinstance(string, str):
         raise TypeError(f"Required value of type 'str', got {type(string).__name__!r}.")
 
-    elem = unicodedata.normalize("NFKC", string.strip())
-    elem = re.sub(r"\s{2,}", " ", elem)
-    elem = elem.replace("“", '"')
-    elem = elem.replace("”", '"')
-    return elem
+    stmt = unicodedata.normalize(form, string)
+    stmt = stmt.translate(_UNICODE_GENERAL_PUNCTUATION)
+    stmt = re.sub(r"\,{2,}", ",", stmt)
+    stmt = re.sub(r"\:{2,}", ":", stmt)
+    stmt = re.sub(r"\s{2,}", " ", stmt)
+    if strip:
+        stmt = stmt.strip()
+
+    return stmt

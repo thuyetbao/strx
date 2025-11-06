@@ -64,33 +64,47 @@ import strx
 For general string manipulation
 
 ```py
+strx.str_snakecase
+strx.str_reverse
+strx.str_pad
 strx.str_length
 strx.str_sub
 strx.str_trim
-strx.str_reverse
-strx.str_detect
-strx.str_snakecase
-strx.str_remove
-strx.str_replace
-strx.str_replace_all
-strx.str_pad
-strx.str_split
 strx.str_count
-strx.str_which
 strx.str_sort
 strx.str_unique
 strx.str_dup
-strx.str_c
+```
+
+For string pattern matching
+
+```py
+strx.str_detect
+strx.str_remove
+strx.str_replace
+strx.str_replace_all
+strx.str_split
+strx.str_which
 strx.str_extract
 strx.str_extract_all
 ```
 
-Convert string to general cases
+Join strings
 
 ```py
-strx.str_to_upper
-strx.str_to_lower
-strx.str_to_title
+strx.str_concat("strx", "is", "awesome", sep=" ")
+"strx is awesome"
+```
+
+Convert string to different cases, such as upper, lower, title
+
+```py
+strx.str_to_upper("strx")
+"STRX"
+strx.str_to_lower("STRX")
+"strx"
+strx.str_to_title("strx")
+"Strx"
 ```
 
 Convert string into numeric (float, int) and ratio

@@ -15,6 +15,36 @@ import strx
 
 
 @pytest.mark.parametrize(
+    "value, output",
+    [
+        ("The quick brown fox jumps over the lazy dog.", "THE QUICK BROWN FOX JUMPS OVER THE LAZY DOG."),
+    ],
+)
+def test_upper(value, output):
+    assert strx.str_to_upper(string=value) == output
+
+
+@pytest.mark.parametrize(
+    "value, output",
+    [
+        ("The quick brown fox jumps over the lazy dog.", "the quick brown fox jumps over the lazy dog."),
+    ],
+)
+def test_lower(value, output):
+    assert strx.str_to_lower(string=value) == output
+
+
+@pytest.mark.parametrize(
+    "value, output",
+    [
+        ("The quick brown fox jumps over the lazy dog.", "The Quick Brown Fox Jumps Over The Lazy Dog."),
+    ],
+)
+def test_title(value, output):
+    assert strx.str_to_title(string=value) == output
+
+
+@pytest.mark.parametrize(
     "value, radix, delimiter, output",
     [
         ("1,000,000.00", "DOT", "auto", float(1000000)),
@@ -31,7 +61,7 @@ import strx
     ],
 )
 def test_parse_number_success(value, radix, delimiter, output):
-    assert math.isclose(strx.str_to_number(value, radix=radix, delimiter=delimiter), output)
+    assert math.isclose(strx.str_to_number(string=value, radix=radix, delimiter=delimiter), output)
 
 
 def test_parse_number_failure_on_multiple_decimal():
@@ -41,7 +71,7 @@ def test_parse_number_failure_on_multiple_decimal():
 
 def test_parse_number_failure_on_same_radix_and_delimiter():
     with pytest.raises(ValueError):
-        strx.str_to_number("1000,000.00", radix="DOT", delimiter="DOT")
+        strx.str_to_number(string="1000,000.00", radix="DOT", delimiter="DOT")
 
 
 @pytest.mark.parametrize(
@@ -59,3 +89,30 @@ def test_parse_ratio_success(value, sep_by, output):
 def test_parse_ratio_failure_by_denominator_is_zero():
     with pytest.raises(ZeroDivisionError):
         strx.str_to_ratio("350:0")
+
+
+@pytest.mark.parametrize(
+    "value, sep_by",
+    [
+        ("350:100:1", ":"),
+        ("1,000:276:2", ":"),
+        ("345.0/44/", "/"),
+        ("24|8902|", "|"),
+    ],
+)
+def test_parse_ratio_failure_on_multiple_delimiter(value, sep_by):
+    with pytest.raises(ValueError):
+        strx.str_to_ratio(string=value, sep_by=sep_by)
+
+
+@pytest.mark.parametrize(
+    "value, sep_by",
+    [
+        ("12'9999:100", ":"),
+        # ("12,9999:100", ":"), # TODO: fix this
+    ],
+)
+def test_parse_ratio_failure_on_fail_parse_number(value, sep_by):
+    with pytest.raises(ValueError) as excinfo:
+        strx.str_to_ratio(string=value, sep_by=sep_by)
+    assert "Failed to convert ratio parts using" in str(excinfo.value)

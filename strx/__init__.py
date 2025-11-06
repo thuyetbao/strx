@@ -17,7 +17,7 @@ from .transform import (
     str_sort,
     str_unique,
     str_dup,
-    str_c,
+    str_concat,
     str_extract,
     str_extract_all,
 )
@@ -52,7 +52,7 @@ __all__ = [
     "str_sort",
     "str_unique",
     "str_dup",
-    "str_c",
+    "str_concat",
     "str_extract",
     "str_extract_all",
     "str_to_upper",
@@ -63,4 +63,4 @@ __all__ = [
     "str_normalize",
 ]
 
-__version__ = "0.2.14"
+__version__ = "0.3.1"
